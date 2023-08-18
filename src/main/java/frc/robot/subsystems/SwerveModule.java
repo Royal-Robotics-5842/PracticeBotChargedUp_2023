@@ -45,6 +45,9 @@ public class SwerveModule {
         driveMotor.setInverted(driveMotorReversed);
         turningMotor.setInverted(turningMotorReversed);
 
+        driveMotor.setSmartCurrentLimit(50);
+        turningMotor.setSmartCurrentLimit(50);
+
         driveEncoder = driveMotor.getEncoder();
         turningEncoder = turningMotor.getEncoder();
         
