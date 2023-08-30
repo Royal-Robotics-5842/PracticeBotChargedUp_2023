@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.Speed;
 import frc.robot.commands.SwerveDriveJoystick;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -24,25 +25,27 @@ import edu.wpi.first.wpilibj.Joystick;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  public final Speed speed = new Speed(swerveSubsystem);
   private final Joystick driverJoytick = new Joystick(OIConstants.kDriverControllerPort);
  
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OIConstants.kDriverControllerPort);
+  private final CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    swerveSubsystem.setDefaultCommand(speed);
+    /*
     swerveSubsystem.setDefaultCommand(new SwerveDriveJoystick(
       swerveSubsystem,
       () -> -driverJoytick.getRawAxis(OIConstants.kDriverYAxis),
       () -> driverJoytick.getRawAxis(OIConstants.kDriverXAxis),
       () -> driverJoytick.getRawAxis(OIConstants.kDriverRotAxis),
-      () -> !driverJoytick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
-
+      () -> false));//driverJoytick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
+    */
     // Configure the trigger bindings
-    configureBindings();
+    //configureBindings();
   }
 
   /**

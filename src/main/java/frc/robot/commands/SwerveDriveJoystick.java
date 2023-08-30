@@ -12,6 +12,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.subsystems.SwerveModule;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class SwerveDriveJoystick extends CommandBase {
@@ -26,8 +27,11 @@ public class SwerveDriveJoystick extends CommandBase {
   public SwerveDriveJoystick(SwerveSubsystem swerveSubsystem,
   Supplier<Double> xSpdFunction, Supplier<Double> ySpdFunction, Supplier<Double> turningSpdFunction,
   Supplier<Boolean> fieldOrientedFunction){
+
     // Use addRequirements() here to declare subsystem dependencies.
     this.swerveSubsystem = swerveSubsystem;
+    addRequirements(swerveSubsystem);
+  
     this.xSpdFunction = xSpdFunction;
     this.ySpdFunction = ySpdFunction;
     this.turningSpdFunction = turningSpdFunction;
@@ -35,8 +39,7 @@ public class SwerveDriveJoystick extends CommandBase {
     this.xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
     this.yLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
     this.turningLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
-    addRequirements(swerveSubsystem);
-
+       
   }
 
   // Called when the command is initially scheduled.
@@ -52,6 +55,8 @@ public class SwerveDriveJoystick extends CommandBase {
     double ySpeed = ySpdFunction.get();
     double turningSpeed = turningSpdFunction.get();
 
+    //swerveSubsystem.backRight.setPosition();
+
     // 2. Apply deadband
     xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
     ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0.0;
@@ -63,8 +68,10 @@ public class SwerveDriveJoystick extends CommandBase {
     turningSpeed = turningLimiter.calculate(turningSpeed)
             * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
 
+    System.out.println(swerveSubsystem.backLeft.getTurningPosition());
+
+
     // 4. Construct desired chassis speeds
-    
     // ChassisSpeeds chassisSpeeds;
     if (fieldOrientedFunction.get()) {
         // Relative to field
