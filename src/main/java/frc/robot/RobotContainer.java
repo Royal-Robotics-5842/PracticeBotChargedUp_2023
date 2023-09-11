@@ -35,17 +35,13 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    swerveSubsystem.setDefaultCommand(speed);
-    /*
     swerveSubsystem.setDefaultCommand(new SwerveDriveJoystick(
       swerveSubsystem,
       () -> -driverJoytick.getRawAxis(OIConstants.kDriverYAxis),
       () -> driverJoytick.getRawAxis(OIConstants.kDriverXAxis),
-      () -> driverJoytick.getRawAxis(OIConstants.kDriverRotAxis),
-      () -> false));//driverJoytick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
-    */
+      () -> driverJoytick.getRawAxis(OIConstants.kDriverRotAxis)));//driverJoytick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
     // Configure the trigger bindings
-    //configureBindings();
+    configureBindings();
   }
 
   /**
@@ -58,10 +54,9 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    
-    if ( driverJoytick.getRawButtonPressed(2) == true){
-      swerveSubsystem.zeroHeading();
-    }
+    m_driverController.a().onTrue(speed);  
+  
+  }
     
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     // new Trigger(m_exampleSubsystem::exampleCondition)
@@ -70,7 +65,6 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -82,3 +76,4 @@ public class RobotContainer {
     return Autos.exampleAuto(m_exampleSubsystem);
   }
 }
+
