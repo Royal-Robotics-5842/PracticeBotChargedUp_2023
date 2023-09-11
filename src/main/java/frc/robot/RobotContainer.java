@@ -6,7 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.Speed;
+import frc.robot.commands.ZeroEncoder;
 import frc.robot.commands.SwerveDriveJoystick;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.Joystick;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
-  public final Speed speed = new Speed(swerveSubsystem);
+  public final ZeroEncoder zeroEncoder = new ZeroEncoder(swerveSubsystem);
   private final Joystick driverJoytick = new Joystick(OIConstants.kDriverControllerPort);
  
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
@@ -54,7 +54,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_driverController.a().onTrue(speed);  
+    m_driverController.a().onTrue(zeroEncoder);  
   
   }
     
