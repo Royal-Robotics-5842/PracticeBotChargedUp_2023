@@ -36,10 +36,21 @@ public class Speed extends CommandBase {
   @Override
   public void execute() 
   {
+    if (swerve.backLeft.CANabsoluteEncoder.getAbsolutePosition() < 5 && swerve.backLeft.CANabsoluteEncoder.getAbsolutePosition() > 0)
+    {
+      swerve.backLeft.stop();
+    }
+    /*
+    swerve.backLeft.setSpeed(0.1);
+    swerve.backRight.setSpeed(0.1);
     swerve.frontLeft.setSpeed(0.1);
-    //System.out.println(swerve.frontLeft.CANabsoluteEncoder.configAbsoluteSensorRange(swerve.frontLeft.CANabsoluteEncoder.configGetAbsoluteSensorRange()));
-    System.out.println(Math.abs(swerve.backLeft.getTurningPosition()) >= 0);
-    System.out.println("Turning Encoder Value" + swerve.backLeft.getTurningPosition());
+    swerve.frontRight.setSpeed(0.1);
+  */
+    
+   //System.out.println(swerve.frontLeft.CANabsoluteEncoder.setPosition(0));
+
+    System.out.println("Turning Encoder Value " + swerve.backLeft.CANabsoluteEncoder.getAbsolutePosition());
+
   }
 
   // Called once the command ends or is interrupted.
@@ -50,6 +61,13 @@ public class Speed extends CommandBase {
   @Override
   public boolean isFinished() 
   {
-    return 
+    if (swerve.backLeft.CANabsoluteEncoder.getAbsolutePosition() < 5 && swerve.backLeft.CANabsoluteEncoder.getAbsolutePosition() > 0
+        && swerve.backRight.CANabsoluteEncoder.getAbsolutePosition() < 5 && swerve.backRight.CANabsoluteEncoder.getAbsolutePosition() > 0
+        && swerve.frontLeft.CANabsoluteEncoder.getAbsolutePosition() < 5 && swerve.frontLeft.CANabsoluteEncoder.getAbsolutePosition() > 0
+        && swerve.frontRight.CANabsoluteEncoder.getAbsolutePosition() < 5 && swerve.frontRight.CANabsoluteEncoder.getAbsolutePosition() > 0)
+    {
+      return true;
+    }
+    return false;
   }
 }

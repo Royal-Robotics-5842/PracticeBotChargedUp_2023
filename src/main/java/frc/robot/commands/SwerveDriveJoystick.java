@@ -19,14 +19,12 @@ public class SwerveDriveJoystick extends CommandBase {
   
   private final SwerveSubsystem swerveSubsystem;
   private final Supplier<Double> xSpdFunction, ySpdFunction, turningSpdFunction;
-  private final Supplier<Boolean> fieldOrientedFunction;
-  private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
 
   private ChassisSpeeds chassisSpeeds;
 
   public SwerveDriveJoystick(SwerveSubsystem swerveSubsystem,
-  Supplier<Double> xSpdFunction, Supplier<Double> ySpdFunction, Supplier<Double> turningSpdFunction,
-  Supplier<Boolean> fieldOrientedFunction){
+  Supplier<Double> xSpdFunction, Supplier<Double> ySpdFunction, Supplier<Double> turningSpdFunction)
+  {
 
     // Use addRequirements() here to declare subsystem dependencies.
     this.swerveSubsystem = swerveSubsystem;
@@ -35,11 +33,7 @@ public class SwerveDriveJoystick extends CommandBase {
     this.xSpdFunction = xSpdFunction;
     this.ySpdFunction = ySpdFunction;
     this.turningSpdFunction = turningSpdFunction;
-    this.fieldOrientedFunction = fieldOrientedFunction;
-    this.xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
-    this.yLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
-    this.turningLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
-       
+
   }
 
   // Called when the command is initially scheduled.
@@ -55,39 +49,59 @@ public class SwerveDriveJoystick extends CommandBase {
     double ySpeed = ySpdFunction.get();
     double turningSpeed = turningSpdFunction.get();
 
-    //swerveSubsystem.backRight.setPosition();
-
-    // 2. Apply deadband
     xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
     ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0.0;
     turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0.0;
 
-    // 3. Make the driving smoother
-    xSpeed = xLimiter.calculate(xSpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
-    ySpeed = yLimiter.calculate(ySpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
-    turningSpeed = turningLimiter.calculate(turningSpeed)
-            * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
 
-    System.out.println(swerveSubsystem.backLeft.getTurningPosition());
+    System.out.println("xSpeed " + xSpeed);
+    System.out.println("ySpeed " + ySpeed);
+    System.out.println("turningSpeed " + turningSpeed);
 
-
-    // 4. Construct desired chassis speeds
-    // ChassisSpeeds chassisSpeeds;
-    if (fieldOrientedFunction.get()) {
-        // Relative to field
-        chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-                xSpeed, ySpeed, turningSpeed, swerveSubsystem.getRotation2d());
-        
-    } else {
-        // Relative to robot
-        chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
+    
+    if(xSpeed == 0)
+    {
+      swerveSubsystem.frontLeft.stop();
+      swerveSubsystem.frontRight.stop();
+      swerveSubsystem.backLeft.stop();
+      swerveSubsystem.backRight.stop();
     }
-  
-  // 5. Convert chassis speeds to individual module states
-  SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
 
-  // 6. Output each module states to wheels
-  swerveSubsystem.setModuleStates(moduleStates);
+    if(turningSpeed == 0)
+    {
+      swerveSubsystem.frontLeft.stop();
+      swerveSubsystem.frontRight.stop();
+      swerveSubsystem.backLeft.stop();
+      swerveSubsystem.backRight.stop();
+    } 
+
+    if(xSpeed > 0 || xSpeed < 0)
+    {
+      swerveSubsystem.frontLeft.setSpeedDrive(xSpeed);
+      swerveSubsystem.frontRight.setSpeedDrive(xSpeed);
+      swerveSubsystem.backLeft.setSpeedDrive(xSpeed);
+      swerveSubsystem.backRight.setSpeedDrive(xSpeed);
+    }
+
+    if (turningSpeed > 0 || turningSpeed < 0)
+    {
+      swerveSubsystem.frontLeft.setSpeedTurn(turningSpeed);
+      swerveSubsystem.frontRight.setSpeedTurn(turningSpeed);
+      swerveSubsystem.backLeft.setSpeedTurn(turningSpeed);
+      swerveSubsystem.backRight.setSpeedTurn(turningSpeed);
+    }
+
+
+
+
+    //chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
+
+    // 5. Convert chassis speeds to individual module states
+    //SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
+
+    // 6. Output each module states to wheels
+    //swerveSubsystem.setModuleStates(moduleStates);
+    
   }
   
   // Called once the command ends or is interrupted.
