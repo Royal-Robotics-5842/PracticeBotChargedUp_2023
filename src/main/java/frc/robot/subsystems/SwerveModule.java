@@ -51,7 +51,7 @@ public class SwerveModule {
         //turningEncoder.setPositionConversionFactor(ModuleConstants.kTurningEncoderRot2Rad);
         //turningEncoder.setVelocityConversionFactor(ModuleConstants.kTurningEncoderRPM2RadPerSec);
 
-        turningPidController = new PIDController(ModuleConstants.kTurnP, 0, 0);
+        turningPidController = new PIDController(0.0001, 0,0);
 
         turningPidController.enableContinuousInput(-180, 180);
 
@@ -66,10 +66,30 @@ public class SwerveModule {
         return driveEncoder.getPosition();
     }
 
+
+
     public double getTurningPosition() 
     {
         return CANabsoluteEncoder.getAbsolutePosition();
     }
+    public double getTurningPositionRL() 
+    {
+        return CANabsoluteEncoder.getAbsolutePosition();
+    }
+    public double getTurningPositionFL() 
+    {
+        return CANabsoluteEncoder.getAbsolutePosition();
+    }
+    public double getTurningPositionRB() 
+    {
+        return CANabsoluteEncoder.getAbsolutePosition();
+    }
+    public double getTurningPositionFB() 
+    {
+        return CANabsoluteEncoder.getAbsolutePosition();
+    }
+
+
 
     public double getDriveVelocity() 
     {
@@ -81,15 +101,20 @@ public class SwerveModule {
         CANabsoluteEncoder.setPositionToAbsolute();
     }
 
+
     public SwerveModuleState getState() {
-        return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getTurningPosition()));
+        return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getTurningPositionFB()));
     }
+
 
     public void setDesiredState(SwerveModuleState state) 
     {
-        state = SwerveModuleState.optimize(state, getState().angle);
+        //state = SwerveModuleState.optimize(state, getState().angle);
         driveMotor.set(state.speedMetersPerSecond);
-        //turningPidController.calculate(getTurningPosition(), state.angle.getRadians()));
+        System.out.println("Turning Position Encoder " + getTurningPositionFB());
+        turningMotor.set(turningPidController.calculate(getTurningPositionFB(), 45));
+        System.out.println("Turning PID " + turningPidController.calculate(getTurningPositionFB(), 0));
+        //System.out.println("state: " + state.angle.getDegrees());
         //SmartDashboard.putString("Swerve[" + absoluteEncoder.getChannel() + "] state", state.toString());
     }
 

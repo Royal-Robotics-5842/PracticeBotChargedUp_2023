@@ -19,7 +19,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class ZeroEncoder extends CommandBase {
   /** Creates a new Speed. */
-
+  private ChassisSpeeds chassisSpeeds;
     private final SwerveSubsystem swerve;
 
   public ZeroEncoder(SwerveSubsystem swerve) 
@@ -36,7 +36,17 @@ public class ZeroEncoder extends CommandBase {
   @Override
   public void execute() 
   {
-    if (swerve.backLeft.CANabsoluteEncoder.getAbsolutePosition() < 1 && swerve.backLeft.CANabsoluteEncoder.getAbsolutePosition() > 0)
+    chassisSpeeds = new ChassisSpeeds(0, 0, 0);
+  
+
+    // 5. Convert chassis speeds to individual module states
+    SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
+
+    // 6. Output each module states to wheels
+    swerve.setModuleStates(moduleStates);
+    //System.out.println("turningSpeed " + moduleStates);
+    /*
+    if (swerve.backLeft.CANabsoluteEncoder.getAbsolutePosition() < 3 && swerve.backLeft.CANabsoluteEncoder.getAbsolutePosition() > 0)
     {
       swerve.backLeft.stop();
     }
@@ -45,7 +55,7 @@ public class ZeroEncoder extends CommandBase {
       swerve.backLeft.setSpeedTurn(0.05);
     }
 
-    if (swerve.backRight.CANabsoluteEncoder.getAbsolutePosition() < 1 && swerve.backRight.CANabsoluteEncoder.getAbsolutePosition() > 0)
+    if (swerve.backRight.CANabsoluteEncoder.getAbsolutePosition() < 3 && swerve.backRight.CANabsoluteEncoder.getAbsolutePosition() > 0)
     {
       swerve.backRight.stop();
     }
@@ -53,8 +63,7 @@ public class ZeroEncoder extends CommandBase {
     {
       swerve.backRight.setSpeedTurn(0.05);
     }
-
-    if (swerve.frontLeft.CANabsoluteEncoder.getAbsolutePosition() < 1 && swerve.frontLeft.CANabsoluteEncoder.getAbsolutePosition() > 0)
+    if (swerve.frontLeft.getTurningPositionFL() < 3 && swerve.frontLeft.getTurningPositionFL() > 0)
     {
       swerve.frontLeft.stop();
     }
@@ -62,8 +71,9 @@ public class ZeroEncoder extends CommandBase {
     {
       swerve.frontLeft.setSpeedTurn(0.05);
     }
+    
 
-    if (swerve.frontRight.CANabsoluteEncoder.getAbsolutePosition() < 1 && swerve.frontRight.CANabsoluteEncoder.getAbsolutePosition() > 0)
+    if (swerve.frontRight.CANabsoluteEncoder.getAbsolutePosition() < 3 && swerve.frontRight.CANabsoluteEncoder.getAbsolutePosition() > 0)
     {
       swerve.frontRight.stop();
     }
@@ -72,10 +82,10 @@ public class ZeroEncoder extends CommandBase {
       swerve.frontRight.setSpeedTurn(0.05);
     }
     
-    
+    */
    //System.out.println(swerve.frontLeft.CANabsoluteEncoder.setPosition(0));
 
-    System.out.println("Turning Encoder Value " + swerve.backLeft.CANabsoluteEncoder.getAbsolutePosition());
+    System.out.println("Turning Encoder Value " + swerve.frontLeft.CANabsoluteEncoder.getAbsolutePosition());
 
   }
 
@@ -87,11 +97,9 @@ public class ZeroEncoder extends CommandBase {
   @Override
   public boolean isFinished() 
   {
-    if (swerve.backLeft.CANabsoluteEncoder.getAbsolutePosition() < 5 && swerve.backLeft.CANabsoluteEncoder.getAbsolutePosition() > 0
-        && swerve.backRight.CANabsoluteEncoder.getAbsolutePosition() < 5 && swerve.backRight.CANabsoluteEncoder.getAbsolutePosition() > 0
-        && swerve.frontLeft.CANabsoluteEncoder.getAbsolutePosition() < 5 && swerve.frontLeft.CANabsoluteEncoder.getAbsolutePosition() > 0
-        && swerve.frontRight.CANabsoluteEncoder.getAbsolutePosition() < 5 && swerve.frontRight.CANabsoluteEncoder.getAbsolutePosition() > 0)
+    if (swerve.backLeft.CANabsoluteEncoder.getAbsolutePosition() < 5 && swerve.backLeft.CANabsoluteEncoder.getAbsolutePosition() > 0)
     {
+      System.out.print("done");
       return true;
     }
     return false;

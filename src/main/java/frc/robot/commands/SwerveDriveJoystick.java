@@ -23,17 +23,16 @@ public class SwerveDriveJoystick extends CommandBase {
   private ChassisSpeeds chassisSpeeds;
 
   public SwerveDriveJoystick(SwerveSubsystem swerveSubsystem,
-  Supplier<Double> xSpdFunction, Supplier<Double> ySpdFunction, Supplier<Double> turningSpdFunction)
-  {
+  Supplier<Double> xSpdFunction, Supplier<Double> ySpdFunction, Supplier<Double> turningSpdFunction) {
+              this.swerveSubsystem = swerveSubsystem;
+              this.xSpdFunction = xSpdFunction;
+              this.ySpdFunction = ySpdFunction;
+              this.turningSpdFunction = turningSpdFunction;
 
     // Use addRequirements() here to declare subsystem dependencies.
-    this.swerveSubsystem = swerveSubsystem;
+
     addRequirements(swerveSubsystem);
   
-    this.xSpdFunction = xSpdFunction;
-    this.ySpdFunction = ySpdFunction;
-    this.turningSpdFunction = turningSpdFunction;
-
   }
 
   // Called when the command is initially scheduled.
@@ -47,18 +46,17 @@ public class SwerveDriveJoystick extends CommandBase {
     // 1. Get real-time joystick inputs
     double xSpeed = xSpdFunction.get();
     double ySpeed = ySpdFunction.get();
-    double turningSpeed = turningSpdFunction.get();
+    double turningSpeed = turningSpdFunction.get()*0.75;
 
     xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
     ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0.0;
     turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0.0;
 
 
-    System.out.println("xSpeed " + xSpeed);
-    System.out.println("ySpeed " + ySpeed);
-    System.out.println("turningSpeed " + turningSpeed);
+    //System.out.println("xSpeed " + xSpeed);
+    //System.out.println("ySpeed " + ySpeed);
 
-    
+    /*
     if(xSpeed == 0)
     {
       swerveSubsystem.frontLeft.stop();
@@ -81,8 +79,8 @@ public class SwerveDriveJoystick extends CommandBase {
       swerveSubsystem.frontRight.setSpeedDrive(xSpeed);
       swerveSubsystem.backLeft.setSpeedDrive(xSpeed);
       swerveSubsystem.backRight.setSpeedDrive(xSpeed);
+      
     }
-
     if (turningSpeed > 0 || turningSpeed < 0)
     {
       swerveSubsystem.frontLeft.setSpeedTurn(turningSpeed);
@@ -90,17 +88,16 @@ public class SwerveDriveJoystick extends CommandBase {
       swerveSubsystem.backLeft.setSpeedTurn(turningSpeed);
       swerveSubsystem.backRight.setSpeedTurn(turningSpeed);
     }
-
-
-
-
-    //chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
+    */
+    chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
+  
 
     // 5. Convert chassis speeds to individual module states
-    //SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
+    SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
 
     // 6. Output each module states to wheels
-    //swerveSubsystem.setModuleStates(moduleStates);
+    swerveSubsystem.setModuleStates(moduleStates);
+    //System.out.println("turningSpeed " + moduleStates);
     
   }
   
