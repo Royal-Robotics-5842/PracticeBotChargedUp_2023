@@ -32,17 +32,16 @@ public class RobotContainer {
   private final ZeroHeading zeroHeading = new ZeroHeading(swerveSubsystem);
   private final setTo45 setTo45 = new setTo45(swerveSubsystem);
   private final IntakeSubsytem intake = new IntakeSubsytem();
-  //private final IntakeWithTriggers intakeWithTriggers = new IntakeWithTriggers(IntakeSubsytem);
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
+  //All our controller stuff!
   private final CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
   private final Trigger yButton = m_driverController.y();
   private final double lefTrigger = m_driverController.getLeftTriggerAxis();
   private final double rightTrigger = m_driverController.getRightTriggerAxis();
 
 
-  SendableChooser<Command> auto_chooser = new SendableChooser<>();
-  //rivate final Field2d m_field = new Field2d();
+  SendableChooser<Command> auto_chooser = new SendableChooser<>(); //Initializing the autonomous chooser 
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     swerveSubsystem.setDefaultCommand(new SwerveDriveJoystick(
@@ -59,7 +58,7 @@ public class RobotContainer {
 
       Autos.Straight(swerveSubsystem).setName("Straight");
       Autos.RunIntakeandTraj(swerveSubsystem, intake).setName("Intake");
-      
+
       auto_chooser.setDefaultOption("Auto 1", Autos.Straight(swerveSubsystem));
       auto_chooser.addOption("Auto 2", Autos.RunIntakeandTraj(swerveSubsystem, intake));
       SmartDashboard.putData(auto_chooser);
