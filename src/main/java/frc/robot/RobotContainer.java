@@ -28,13 +28,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
-<<<<<<< HEAD
   private final IntakeSubsytem IntakeSubsytem = new IntakeSubsytem();
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   public final Joystick driverJoytick = new Joystick(OIConstants.kDriverControllerPort);
-=======
-  private final Joystick driverJoytick = new Joystick(OIConstants.kDriverControllerPort);
->>>>>>> fecd7703883aa159f8fe933d030c0c2d5a5c98dc
   private final ZeroHeading zeroHeading = new ZeroHeading(swerveSubsystem);
   private final setTo45 setTo45 = new setTo45(swerveSubsystem);
   private final IntakeSubsytem intake = new IntakeSubsytem();
@@ -66,16 +61,6 @@ public class RobotContainer {
       auto_chooser.setDefaultOption("Auto 1", Autos.Straight(swerveSubsystem));
       auto_chooser.addOption("Auto 2", Autos.RunIntakeandTraj(swerveSubsystem, intake));
       SmartDashboard.putData(auto_chooser);
-<<<<<<< HEAD
-      () -> !driverJoytick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
-
-      IntakeSubsytem.setDefaultCommand(new IntakeWithTriggers(IntakeSubsytem, 
-                                      m_driverController.getLeftTriggerAxis(),
-                                      m_driverController.getRightTriggerAxis()));
-=======
-
->>>>>>> fecd7703883aa159f8fe933d030c0c2d5a5c98dc
-    // Configure the tri gger bindings
     configureBindings();
   }
 

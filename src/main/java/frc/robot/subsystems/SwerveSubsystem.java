@@ -107,7 +107,7 @@ public void resetOdometry(Pose2d pose) {
     backRight.stop();
   }
 
-  public void       s(SwerveModuleState[] desiredStates) 
+  public void setModuleStates(SwerveModuleState[] desiredStates) 
   {
     frontLeft.setDesiredState(desiredStates[0]);
     frontRight.setDesiredState(desiredStates[1]); 

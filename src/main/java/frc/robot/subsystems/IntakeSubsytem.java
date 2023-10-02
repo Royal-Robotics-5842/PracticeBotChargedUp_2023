@@ -32,12 +32,6 @@ public class IntakeSubsytem extends SubsystemBase {
     leftMotor.set(speed);
   }
 
-  public void setSpeed(double speed)
-  {
-    rightMotor.set(speed);
-    leftMotor.set(speed);
-  }
-
   public void stopMotors()
   {
     rightMotor.set(0);
