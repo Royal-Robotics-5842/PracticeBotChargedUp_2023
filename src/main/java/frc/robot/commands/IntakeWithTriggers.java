@@ -40,11 +40,6 @@ public class IntakeWithTriggers extends CommandBase {
       intake.setSpeed(leftSpeed);
     if (rightSpeed > 0)
       intake.setSpeed(rightSpeed);
-    
-
-          
-    
-    
   }
 
   // Called once the command ends or is interrupted.

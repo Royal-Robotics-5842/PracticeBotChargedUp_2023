@@ -13,6 +13,7 @@ import frc.robot.commands.ZeroHeading;
 import frc.robot.commands.setTo45;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.IntakeSubsytem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -50,6 +51,7 @@ public class RobotContainer {
   private final Joystick driverJoytick = new Joystick(OIConstants.kDriverControllerPort);
   private final ZeroHeading zeroHeading = new ZeroHeading(swerveSubsystem);
   private final setTo45 setTo45 = new setTo45(swerveSubsystem);
+  private final IntakeSubsytem intake = new IntakeSubsytem();
  
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -57,7 +59,7 @@ public class RobotContainer {
   private final Trigger yButton = m_driverController.y();
 
 
-  SendableChooser<Command> m_chooser = new SendableChooser<>();
+  SendableChooser<Command> auto_chooser = new SendableChooser<>();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     swerveSubsystem.setDefaultCommand(new SwerveDriveJoystick(
@@ -70,11 +72,13 @@ public class RobotContainer {
 
 
       SmartDashboard.putBoolean("Field Centric", yButton.getAsBoolean());
-     
-      m_chooser.setDefaultOption("Auto 1", Autos.Straight(swerveSubsystem));
-      m_chooser.addOption("Auto 2", zeroHeading);
+    
+      
 
-      SmartDashboard.putData(m_chooser);
+      auto_chooser.setDefaultOption("Auto 1", Autos.Straight(swerveSubsystem));
+      auto_chooser.addOption("Auto 2", Autos.RunIntakeandTraj(swerveSubsystem, intake ));
+
+      SmartDashboard.putData(auto_chooser);
     // Configure the tri gger bindings
     configureBindings();
   }
@@ -109,7 +113,7 @@ public class RobotContainer {
    * @return the scommand to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return m_chooser.getSelected();
+    return auto_chooser.getSelected();
   }
 }
 

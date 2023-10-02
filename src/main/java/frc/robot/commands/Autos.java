@@ -7,6 +7,7 @@ package frc.robot.commands;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.IntakeSubsytem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 import java.util.ArrayList;
@@ -19,13 +20,17 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+
 
 public final class Autos {
   /** Example static factory for an autonomous command. */
+
 
   public static CommandBase Straight(SwerveSubsystem swerveSubsystem) {
         // 1. Create trajectory settings
@@ -73,7 +78,11 @@ public final class Autos {
                     new InstantCommand(() -> swerveSubsystem.stopModules()));
       }
 
-  
+      public static CommandBase RunIntakeandTraj(SwerveSubsystem swerveSubsystem, IntakeSubsytem intake)
+      {
+        return Commands.sequence(
+                  new InstantCommand(() -> intake.setSpeed(1)), new WaitCommand(5), Straight(swerveSubsystem));
+      }  
 
   private Autos() {
     throw new UnsupportedOperationException("This is a utility class!");
