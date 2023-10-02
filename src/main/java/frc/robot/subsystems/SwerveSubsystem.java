@@ -110,12 +110,10 @@ public void resetOdometry(Pose2d pose) {
 
   public void setModuleStates(SwerveModuleState[] desiredStates) 
   {
-    //SwerveDriveKinematics.normalizeWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
     frontLeft.setDesiredState(desiredStates[0]);
     frontRight.setDesiredState(desiredStates[1]); 
     backLeft.setDesiredState(desiredStates[2]);
     backRight.setDesiredState(desiredStates[3]);
-    //System.out.println(desiredStates[2]);
 }
 
 
@@ -132,7 +130,6 @@ public void resetOdometry(Pose2d pose) {
   SmartDashboard.putString("Robot Location", getPose().toString());
 
   m_field.setRobotPose(odometer.getPoseMeters());
-  //System.out.println(getHeading());
   }
 
 }
