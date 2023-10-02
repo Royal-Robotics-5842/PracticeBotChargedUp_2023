@@ -35,6 +35,9 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PS4Controller.Button;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -50,11 +53,15 @@ public class RobotContainer {
   public final Joystick driverJoytick = new Joystick(OIConstants.kDriverControllerPort);
   private final ZeroHeading zeroHeading = new ZeroHeading(swerveSubsystem);
   private final setTo45 setTo45 = new setTo45(swerveSubsystem);
+  private final IntakeSubsytem intake = new IntakeSubsytem();
   //private final IntakeWithTriggers intakeWithTriggers = new IntakeWithTriggers(IntakeSubsytem);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
+  private final Trigger yButton = m_driverController.y();
 
+
+  SendableChooser<Command> auto_chooser = new SendableChooser<>();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     swerveSubsystem.setDefaultCommand(new SwerveDriveJoystick(
@@ -62,6 +69,19 @@ public class RobotContainer {
       () -> -driverJoytick.getRawAxis(OIConstants.kDriverYAxis),
       () -> -driverJoytick.getRawAxis(OIConstants.kDriverXAxis),
       () -> driverJoytick.getRawAxis(OIConstants.kDriverRotAxis),
+      () -> !yButton.getAsBoolean()));//driverJoytick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
+
+
+
+      SmartDashboard.putBoolean("Field Centric", yButton.getAsBoolean());
+    
+      
+      Autos.Straight(swerveSubsystem).setName("Straight");
+      Autos.RunIntakeandTraj(swerveSubsystem, intake).setName("Intake");
+      auto_chooser.setDefaultOption("Auto 1", Autos.Straight(swerveSubsystem));
+      auto_chooser.addOption("Auto 2", Autos.RunIntakeandTraj(swerveSubsystem, intake));
+
+      SmartDashboard.putData(auto_chooser);
       () -> !driverJoytick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
 
       IntakeSubsytem.setDefaultCommand(new IntakeWithTriggers(IntakeSubsytem, 
@@ -71,6 +91,7 @@ public class RobotContainer {
     configureBindings();
   }
 
+  
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
    * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
@@ -97,50 +118,10 @@ public class RobotContainer {
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
-   * @return the command to run in autonomous
+   * @return the scommand to run in autonomous
    */
   public Command getAutonomousCommand() {
-
-    // 1. Create trajectory settings
-    TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
-      AutoConstants.kMaxSpeedMetersPerSecond,
-      AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-              .setKinematics(DriveConstants.kDriveKinematics);
-
-    ArrayList<Translation2d> interiorWaypoints = new ArrayList<Translation2d>();
-    interiorWaypoints.add(new Translation2d(-1, 1));
-    interiorWaypoints.add(new Translation2d(-1.25,1.25));
-
-
-    // 2. Generate trajectory
-    Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-      new Pose2d(0, 0, new Rotation2d(0)),
-      interiorWaypoints,
-      new Pose2d(-1,1, Rotation2d.fromDegrees(180)),
-      trajectoryConfig);
-
-    // 3. Define PID controllers for tracking trajectory
-    PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
-    PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
-    ProfiledPIDController thetaController = new ProfiledPIDController(
-            AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
-    thetaController.enableContinuousInput(-180, 180);
-
-    // 4. Construct command to follow trajectory
-    SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-      trajectory,
-      swerveSubsystem::getPose,
-      DriveConstants.kDriveKinematics,
-      xController,
-      yController,
-      thetaController,
-      swerveSubsystem::setModuleStates,
-      swerveSubsystem);
-
-      return new SequentialCommandGroup(
-                new InstantCommand(() -> swerveSubsystem.resetOdometry(trajectory.getInitialPose())),
-                swerveControllerCommand,
-                new InstantCommand(() -> swerveSubsystem.stopModules()));
+    return auto_chooser.getSelected();
   }
 }
 

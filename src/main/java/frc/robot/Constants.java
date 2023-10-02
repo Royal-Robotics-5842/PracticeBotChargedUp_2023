@@ -63,10 +63,10 @@ public final class Constants {
       public static final boolean kFrontRightTurningMotorReversed = false; 
       public static final boolean kBackRightTurningMotorReversed = false;
 
-      public static final boolean kFrontLeftDriveMotorReversed = false;
-      public static final boolean kBackLeftDriveMotorReversed = true;
-      public static final boolean kFrontRightDriveMotorReversed = false;
-      public static final boolean kBackRightDriveMotorReversed = false;
+      public static final boolean kFrontLeftDriveMotorReversed = true;
+      public static final boolean kBackLeftDriveMotorReversed = false;
+      public static final boolean kFrontRightDriveMotorReversed = true;
+      public static final boolean kBackRightDriveMotorReversed = true;
 
       public static final int kFrontLeftTurnAbsoluteEncoderPort = 33;
       public static final int kBackLeftTurnAbsoluteEncoderPort = 35;
@@ -88,9 +88,9 @@ public final class Constants {
             DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond / 10;
     public static final double kMaxAccelerationMetersPerSecondSquared = 3;
     public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI / 4;
-    public static final double kPXController = 0.05;
-    public static final double kPYController = 0.05;
-    public static final double kPThetaController = 0.75;
+    public static final double kPXController = 0.6;
+    public static final double kPYController = 0.6;
+    public static final double kPThetaController = 0.6;
 
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = //
             new TrapezoidProfile.Constraints(

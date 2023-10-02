@@ -9,11 +9,12 @@ import javax.print.CancelablePrintJob;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubsytem extends SubsystemBase {
-  private final CANSparkMax rightMotor = new CANSparkMax(0, MotorType.kBrushless);
-  private final CANSparkMax leftMotor = new CANSparkMax(0, MotorType.kBrushless);
+  private final CANSparkMax rightMotor = new CANSparkMax(65, MotorType.kBrushless);
+  private final CANSparkMax leftMotor = new CANSparkMax(55, MotorType.kBrushless);
 
   public IntakeSubsytem() 
   {
@@ -33,8 +34,20 @@ public class IntakeSubsytem extends SubsystemBase {
     leftMotor.set(speed);
   }
 
+  public void setSpeed(double speed)
+  {
+    rightMotor.set(speed);
+    leftMotor.set(speed);
+  }
+
+  public void stopMotors()
+  {
+    rightMotor.set(0);
+    leftMotor.set(0);
+  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("XController" , rightMotor.getAppliedOutput());
   }
 }
