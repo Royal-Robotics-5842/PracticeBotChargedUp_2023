@@ -19,21 +19,26 @@ public class SwerveDriveJoystick extends CommandBase {
   
   private final SwerveSubsystem swerveSubsystem;
   private final Supplier<Double> xSpdFunction, ySpdFunction, turningSpdFunction;
+  private final Supplier<Boolean> fieldOrientedFunction;
 
-  private ChassisSpeeds chassisSpeeds;
+  private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
 
-  public SwerveDriveJoystick(SwerveSubsystem swerveSubsystem,
-  Supplier<Double> xSpdFunction, Supplier<Double> ySpdFunction, Supplier<Double> turningSpdFunction)
-  {
+  public SwerveDriveJoystick(SwerveSubsystem swerveSubsystem, Supplier<Double> xSpdFunction, Supplier<Double> ySpdFunction, Supplier<Double> turningSpdFunction, 
+                            Supplier<Boolean> fieldOrientedFunction) { 
+              this.swerveSubsystem = swerveSubsystem;
+              this.xSpdFunction = xSpdFunction;
+              this.ySpdFunction = ySpdFunction;
+              this.turningSpdFunction = turningSpdFunction;
+              this.fieldOrientedFunction = fieldOrientedFunction;
+
+              this.xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
+              this.yLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
+              this.turningLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
 
     // Use addRequirements() here to declare subsystem dependencies.
-    this.swerveSubsystem = swerveSubsystem;
+
     addRequirements(swerveSubsystem);
   
-    this.xSpdFunction = xSpdFunction;
-    this.ySpdFunction = ySpdFunction;
-    this.turningSpdFunction = turningSpdFunction;
-
   }
 
   // Called when the command is initially scheduled.
@@ -45,63 +50,37 @@ public class SwerveDriveJoystick extends CommandBase {
   public void execute() 
   {
     // 1. Get real-time joystick inputs
-    double xSpeed = xSpdFunction.get();
+    double xSpeed = -xSpdFunction.get();
     double ySpeed = ySpdFunction.get();
-    double turningSpeed = turningSpdFunction.get();
+    double turningSpeed = -turningSpdFunction.get();
 
     xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
     ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0.0;
     turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0.0;
-
-
-    System.out.println("xSpeed " + xSpeed);
-    System.out.println("ySpeed " + ySpeed);
-    System.out.println("turningSpeed " + turningSpeed);
-
     
-    if(xSpeed == 0)
-    {
-      swerveSubsystem.frontLeft.stop();
-      swerveSubsystem.frontRight.stop();
-      swerveSubsystem.backLeft.stop();
-      swerveSubsystem.backRight.stop();
-    }
+    xSpeed = xLimiter.calculate(xSpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
+    ySpeed = yLimiter.calculate(ySpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
+    turningSpeed = turningLimiter.calculate(turningSpeed)
+            * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
 
-    if(turningSpeed == 0)
-    {
-      swerveSubsystem.frontLeft.stop();
-      swerveSubsystem.frontRight.stop();
-      swerveSubsystem.backLeft.stop();
-      swerveSubsystem.backRight.stop();
-    } 
-
-    if(xSpeed > 0 || xSpeed < 0)
-    {
-      swerveSubsystem.frontLeft.setSpeedDrive(xSpeed);
-      swerveSubsystem.frontRight.setSpeedDrive(xSpeed);
-      swerveSubsystem.backLeft.setSpeedDrive(xSpeed);
-      swerveSubsystem.backRight.setSpeedDrive(xSpeed);
-    }
-
-    if (turningSpeed > 0 || turningSpeed < 0)
-    {
-      swerveSubsystem.frontLeft.setSpeedTurn(turningSpeed);
-      swerveSubsystem.frontRight.setSpeedTurn(turningSpeed);
-      swerveSubsystem.backLeft.setSpeedTurn(turningSpeed);
-      swerveSubsystem.backRight.setSpeedTurn(turningSpeed);
-    }
-
-
-
-
-    //chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
-
-    // 5. Convert chassis speeds to individual module states
-    //SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
-
+    ChassisSpeeds chassisSpeeds;
+        if (fieldOrientedFunction.get())
+            chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+                    xSpeed, ySpeed, turningSpeed, swerveSubsystem.getRotation2d());
+         else {
+            // Relative to robot
+            chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
+        }
+        
+    SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
+    
     // 6. Output each module states to wheels
-    //swerveSubsystem.setModuleStates(moduleStates);
-    
+    swerveSubsystem.setModuleStates(moduleStates);
+
+    System.out.println("FL Drive Encoder: " + swerveSubsystem.frontLeft.getDrivePosition());
+    System.out.println("FR Drive Encoder: " + swerveSubsystem.frontRight.getDrivePosition());
+    System.out.println("BL Drive Encoder: " + swerveSubsystem.backLeft.getDrivePosition());
+    System.out.println("BR Drive Encoder: " + swerveSubsystem.backRight.getDrivePosition());
   }
   
   // Called once the command ends or is interrupted.

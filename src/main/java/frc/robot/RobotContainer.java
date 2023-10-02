@@ -4,16 +4,36 @@
 
 package frc.robot;
 
+import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.ZeroEncoder;
+import frc.robot.commands.IntakeWithTriggers;
 import frc.robot.commands.SwerveDriveJoystick;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.commands.ZeroHeading;
+import frc.robot.commands.setTo45;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.IntakeSubsytem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Joystick;
 
 /**
@@ -25,10 +45,12 @@ import edu.wpi.first.wpilibj.Joystick;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
-  public final ZeroEncoder zeroEncoder = new ZeroEncoder(swerveSubsystem);
-  private final Joystick driverJoytick = new Joystick(OIConstants.kDriverControllerPort);
- 
+  private final IntakeSubsytem IntakeSubsytem = new IntakeSubsytem();
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  public final Joystick driverJoytick = new Joystick(OIConstants.kDriverControllerPort);
+  private final ZeroHeading zeroHeading = new ZeroHeading(swerveSubsystem);
+  private final setTo45 setTo45 = new setTo45(swerveSubsystem);
+  //private final IntakeWithTriggers intakeWithTriggers = new IntakeWithTriggers(IntakeSubsytem);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
@@ -38,9 +60,14 @@ public class RobotContainer {
     swerveSubsystem.setDefaultCommand(new SwerveDriveJoystick(
       swerveSubsystem,
       () -> -driverJoytick.getRawAxis(OIConstants.kDriverYAxis),
-      () -> driverJoytick.getRawAxis(OIConstants.kDriverXAxis),
-      () -> driverJoytick.getRawAxis(OIConstants.kDriverRotAxis)));//driverJoytick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
-    // Configure the trigger bindings
+      () -> -driverJoytick.getRawAxis(OIConstants.kDriverXAxis),
+      () -> driverJoytick.getRawAxis(OIConstants.kDriverRotAxis),
+      () -> !driverJoytick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
+
+      IntakeSubsytem.setDefaultCommand(new IntakeWithTriggers(IntakeSubsytem, 
+                                      m_driverController.getLeftTriggerAxis(),
+                                      m_driverController.getRightTriggerAxis()));
+    // Configure the tri gger bindings
     configureBindings();
   }
 
@@ -54,7 +81,8 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_driverController.a().onTrue(zeroEncoder);  
+    m_driverController.a().onTrue(zeroHeading); 
+    m_driverController.x().onTrue(setTo45);
   
   }
     
@@ -72,8 +100,47 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+
+    // 1. Create trajectory settings
+    TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
+      AutoConstants.kMaxSpeedMetersPerSecond,
+      AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+              .setKinematics(DriveConstants.kDriveKinematics);
+
+    ArrayList<Translation2d> interiorWaypoints = new ArrayList<Translation2d>();
+    interiorWaypoints.add(new Translation2d(-1, 1));
+    interiorWaypoints.add(new Translation2d(-1.25,1.25));
+
+
+    // 2. Generate trajectory
+    Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
+      new Pose2d(0, 0, new Rotation2d(0)),
+      interiorWaypoints,
+      new Pose2d(-1,1, Rotation2d.fromDegrees(180)),
+      trajectoryConfig);
+
+    // 3. Define PID controllers for tracking trajectory
+    PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
+    PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
+    ProfiledPIDController thetaController = new ProfiledPIDController(
+            AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
+    thetaController.enableContinuousInput(-180, 180);
+
+    // 4. Construct command to follow trajectory
+    SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
+      trajectory,
+      swerveSubsystem::getPose,
+      DriveConstants.kDriveKinematics,
+      xController,
+      yController,
+      thetaController,
+      swerveSubsystem::setModuleStates,
+      swerveSubsystem);
+
+      return new SequentialCommandGroup(
+                new InstantCommand(() -> swerveSubsystem.resetOdometry(trajectory.getInitialPose())),
+                swerveControllerCommand,
+                new InstantCommand(() -> swerveSubsystem.stopModules()));
   }
 }
 
