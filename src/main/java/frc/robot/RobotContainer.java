@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.IntakeWithTriggers;
@@ -13,29 +11,11 @@ import frc.robot.commands.SwerveDriveJoystick;
 import frc.robot.commands.ZeroHeading;
 import frc.robot.commands.setTo45;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeSubsytem;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -48,9 +28,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+<<<<<<< HEAD
   private final IntakeSubsytem IntakeSubsytem = new IntakeSubsytem();
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   public final Joystick driverJoytick = new Joystick(OIConstants.kDriverControllerPort);
+=======
+  private final Joystick driverJoytick = new Joystick(OIConstants.kDriverControllerPort);
+>>>>>>> fecd7703883aa159f8fe933d030c0c2d5a5c98dc
   private final ZeroHeading zeroHeading = new ZeroHeading(swerveSubsystem);
   private final setTo45 setTo45 = new setTo45(swerveSubsystem);
   private final IntakeSubsytem intake = new IntakeSubsytem();
@@ -62,6 +46,7 @@ public class RobotContainer {
 
 
   SendableChooser<Command> auto_chooser = new SendableChooser<>();
+  //rivate final Field2d m_field = new Field2d();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     swerveSubsystem.setDefaultCommand(new SwerveDriveJoystick(
@@ -80,13 +65,16 @@ public class RobotContainer {
       Autos.RunIntakeandTraj(swerveSubsystem, intake).setName("Intake");
       auto_chooser.setDefaultOption("Auto 1", Autos.Straight(swerveSubsystem));
       auto_chooser.addOption("Auto 2", Autos.RunIntakeandTraj(swerveSubsystem, intake));
-
       SmartDashboard.putData(auto_chooser);
+<<<<<<< HEAD
       () -> !driverJoytick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
 
       IntakeSubsytem.setDefaultCommand(new IntakeWithTriggers(IntakeSubsytem, 
                                       m_driverController.getLeftTriggerAxis(),
                                       m_driverController.getRightTriggerAxis()));
+=======
+
+>>>>>>> fecd7703883aa159f8fe933d030c0c2d5a5c98dc
     // Configure the tri gger bindings
     configureBindings();
   }

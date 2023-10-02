@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems;
 
-import javax.print.CancelablePrintJob;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
