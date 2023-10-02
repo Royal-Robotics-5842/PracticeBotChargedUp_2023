@@ -22,6 +22,15 @@ public class IntakeSubsytem extends SubsystemBase {
 
     rightMotor.restoreFactoryDefaults();
     leftMotor.restoreFactoryDefaults();
+
+    rightMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    leftMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+  }
+
+  public void setSpeed(double speed)
+  {
+    rightMotor.set(speed);
+    leftMotor.set(speed);
   }
 
   @Override

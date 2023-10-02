@@ -8,11 +8,13 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.IntakeWithTriggers;
 import frc.robot.commands.SwerveDriveJoystick;
 import frc.robot.commands.ZeroHeading;
 import frc.robot.commands.setTo45;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.IntakeSubsytem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -43,11 +45,12 @@ import edu.wpi.first.wpilibj.Joystick;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  private final IntakeSubsytem IntakeSubsytem = new IntakeSubsytem();
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final Joystick driverJoytick = new Joystick(OIConstants.kDriverControllerPort);
+  public final Joystick driverJoytick = new Joystick(OIConstants.kDriverControllerPort);
   private final ZeroHeading zeroHeading = new ZeroHeading(swerveSubsystem);
   private final setTo45 setTo45 = new setTo45(swerveSubsystem);
- 
+  //private final IntakeWithTriggers intakeWithTriggers = new IntakeWithTriggers(IntakeSubsytem);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
@@ -60,6 +63,10 @@ public class RobotContainer {
       () -> -driverJoytick.getRawAxis(OIConstants.kDriverXAxis),
       () -> driverJoytick.getRawAxis(OIConstants.kDriverRotAxis),
       () -> !driverJoytick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
+
+      IntakeSubsytem.setDefaultCommand(new IntakeWithTriggers(IntakeSubsytem, 
+                                      m_driverController.getLeftTriggerAxis(),
+                                      m_driverController.getRightTriggerAxis()));
     // Configure the tri gger bindings
     configureBindings();
   }
