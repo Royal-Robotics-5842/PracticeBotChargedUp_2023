@@ -40,7 +40,7 @@ public class IntakeWithTriggers extends CommandBase {
       intake.setSpeed(leftSpeed);
     if (rightSpeed > 0)
       intake.setSpeed(rightSpeed);
-    }
+    
 
           
     

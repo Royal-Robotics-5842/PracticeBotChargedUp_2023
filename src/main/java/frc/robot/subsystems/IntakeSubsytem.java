@@ -24,6 +24,11 @@ public class IntakeSubsytem extends SubsystemBase {
     leftMotor.restoreFactoryDefaults();
   }
 
+  public void setSpeed(double speed)
+  {
+    rightMotor.set(speed);
+    leftMotor.set(speed);
+  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

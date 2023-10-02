@@ -120,9 +120,10 @@ public void resetOdometry(Pose2d pose) {
       backLeft.getPosition(),
       backRight.getPosition()
     });
+
   SmartDashboard.putNumber("Robot Heading", getHeading());
-  SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
-  System.out.println(getHeading());
+  SmartDashboard.putString("Robot Location", getPose().toString());
+  //System.out.println(getHeading());
   }
 
 }

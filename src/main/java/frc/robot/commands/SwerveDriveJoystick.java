@@ -50,9 +50,9 @@ public class SwerveDriveJoystick extends CommandBase {
   public void execute() 
   {
     // 1. Get real-time joystick inputs
-    double xSpeed = -xSpdFunction.get();
-    double ySpeed = ySpdFunction.get();
-    double turningSpeed = -turningSpdFunction.get();
+    double xSpeed = xSpdFunction.get();
+    double ySpeed = -ySpdFunction.get();
+    double turningSpeed = turningSpdFunction.get();
 
     xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
     ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0.0;
