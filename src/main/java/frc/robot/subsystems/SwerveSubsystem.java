@@ -13,6 +13,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
@@ -47,6 +48,7 @@ public class SwerveSubsystem extends SubsystemBase {
             DriveConstants.kBackRightTurnAbsoluteEncoderPort);
 
     public final AHRS gyro = new AHRS(SPI.Port.kMXP);
+
     private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics,
     new Rotation2d(0),  new SwerveModulePosition[] {
       frontLeft.getPosition(),
@@ -54,7 +56,9 @@ public class SwerveSubsystem extends SubsystemBase {
       backLeft.getPosition(),
       backRight.getPosition()
     });
-    
+
+    public final Field2d m_field = new Field2d();
+
     public SwerveSubsystem() {   
       new Thread(() -> {
         try {
@@ -63,7 +67,10 @@ public class SwerveSubsystem extends SubsystemBase {
         } catch (Exception e) {
         }
     }).start();
+
+        SmartDashboard.putData("Field", m_field);
 }
+
 
   public void zeroHeading() {
       gyro.reset();
@@ -123,6 +130,8 @@ public void resetOdometry(Pose2d pose) {
 
   SmartDashboard.putNumber("Robot Heading", getHeading());
   SmartDashboard.putString("Robot Location", getPose().toString());
+
+  m_field.setRobotPose(odometer.getPoseMeters());
   //System.out.println(getHeading());
   }
 

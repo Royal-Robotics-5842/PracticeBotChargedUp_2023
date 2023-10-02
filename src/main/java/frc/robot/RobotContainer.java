@@ -35,6 +35,7 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -60,6 +61,7 @@ public class RobotContainer {
 
 
   SendableChooser<Command> auto_chooser = new SendableChooser<>();
+  //rivate final Field2d m_field = new Field2d();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     swerveSubsystem.setDefaultCommand(new SwerveDriveJoystick(
@@ -78,8 +80,8 @@ public class RobotContainer {
       Autos.RunIntakeandTraj(swerveSubsystem, intake).setName("Intake");
       auto_chooser.setDefaultOption("Auto 1", Autos.Straight(swerveSubsystem));
       auto_chooser.addOption("Auto 2", Autos.RunIntakeandTraj(swerveSubsystem, intake));
-
       SmartDashboard.putData(auto_chooser);
+
     // Configure the tri gger bindings
     configureBindings();
   }
