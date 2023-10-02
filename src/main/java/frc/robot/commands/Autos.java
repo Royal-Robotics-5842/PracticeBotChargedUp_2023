@@ -20,6 +20,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -40,16 +41,16 @@ public final class Autos {
                   .setKinematics(DriveConstants.kDriveKinematics);
 
         ArrayList<Translation2d> interiorWaypoints = new ArrayList<Translation2d>();
-        interiorWaypoints.add(new Translation2d(0, 1));
-        interiorWaypoints.add(new Translation2d(0, 2));
-        interiorWaypoints.add(new Translation2d(0,3));
+        interiorWaypoints.add(new Translation2d(1, 0));
+        interiorWaypoints.add(new Translation2d(2, 0));
+        interiorWaypoints.add(new Translation2d(3,0));
 
 
         // 2. Generate trajectory
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
           new Pose2d(0, 0, new Rotation2d(0)),
           interiorWaypoints,
-          new Pose2d(0,4, Rotation2d.fromDegrees(0)),
+          new Pose2d(4,0, Rotation2d.fromDegrees(0)),
           trajectoryConfig);
 
 
@@ -71,6 +72,9 @@ public final class Autos {
           swerveSubsystem::setModuleStates,
           swerveSubsystem);
 
+          SmartDashboard.putData("XController" , xController);
+          SmartDashboard.putData("YController" , yController);
+          SmartDashboard.putData("ThetaController" , thetaController);
           
           return Commands.sequence(
                     new InstantCommand(() -> swerveSubsystem.resetOdometry(trajectory.getInitialPose())),
@@ -78,14 +82,18 @@ public final class Autos {
                     new InstantCommand(() -> swerveSubsystem.stopModules()));
       }
 
+      
       public static CommandBase RunIntakeandTraj(SwerveSubsystem swerveSubsystem, IntakeSubsytem intake)
       {
         return Commands.sequence(
                   new InstantCommand(() -> intake.setSpeed(1)), new WaitCommand(5), Straight(swerveSubsystem));
-      }  
+      } 
+      
+  
 
   private Autos() {
     throw new UnsupportedOperationException("This is a utility class!");
+
   }
 
   

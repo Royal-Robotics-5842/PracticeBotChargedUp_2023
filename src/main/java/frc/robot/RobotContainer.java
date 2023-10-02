@@ -74,9 +74,10 @@ public class RobotContainer {
       SmartDashboard.putBoolean("Field Centric", yButton.getAsBoolean());
     
       
-
+      Autos.Straight(swerveSubsystem).setName("Straight");
+      Autos.RunIntakeandTraj(swerveSubsystem, intake).setName("Intake");
       auto_chooser.setDefaultOption("Auto 1", Autos.Straight(swerveSubsystem));
-      auto_chooser.addOption("Auto 2", Autos.RunIntakeandTraj(swerveSubsystem, intake ));
+      auto_chooser.addOption("Auto 2", Autos.RunIntakeandTraj(swerveSubsystem, intake));
 
       SmartDashboard.putData(auto_chooser);
     // Configure the tri gger bindings
