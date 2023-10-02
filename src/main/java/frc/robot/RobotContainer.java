@@ -8,6 +8,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.IntakeWithTriggers;
 import frc.robot.commands.SwerveDriveJoystick;
 import frc.robot.commands.ZeroHeading;
 import frc.robot.commands.setTo45;
@@ -47,12 +48,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  private final IntakeSubsytem IntakeSubsytem = new IntakeSubsytem();
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final Joystick driverJoytick = new Joystick(OIConstants.kDriverControllerPort);
+  public final Joystick driverJoytick = new Joystick(OIConstants.kDriverControllerPort);
   private final ZeroHeading zeroHeading = new ZeroHeading(swerveSubsystem);
   private final setTo45 setTo45 = new setTo45(swerveSubsystem);
   private final IntakeSubsytem intake = new IntakeSubsytem();
- 
+  //private final IntakeWithTriggers intakeWithTriggers = new IntakeWithTriggers(IntakeSubsytem);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
@@ -80,6 +82,11 @@ public class RobotContainer {
       auto_chooser.addOption("Auto 2", Autos.RunIntakeandTraj(swerveSubsystem, intake));
 
       SmartDashboard.putData(auto_chooser);
+      () -> !driverJoytick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
+
+      IntakeSubsytem.setDefaultCommand(new IntakeWithTriggers(IntakeSubsytem, 
+                                      m_driverController.getLeftTriggerAxis(),
+                                      m_driverController.getRightTriggerAxis()));
     // Configure the tri gger bindings
     configureBindings();
   }
