@@ -28,7 +28,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
-  private final IntakeSubsytem IntakeSubsytem = new IntakeSubsytem();
   public final Joystick driverJoytick = new Joystick(OIConstants.kDriverControllerPort);
   private final ZeroHeading zeroHeading = new ZeroHeading(swerveSubsystem);
   private final setTo45 setTo45 = new setTo45(swerveSubsystem);
@@ -38,6 +37,8 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
   private final Trigger yButton = m_driverController.y();
+  private final double lefTrigger = m_driverController.getLeftTriggerAxis();
+  private final double rightTrigger = m_driverController.getRightTriggerAxis();
 
 
   SendableChooser<Command> auto_chooser = new SendableChooser<>();
@@ -51,13 +52,14 @@ public class RobotContainer {
       () -> driverJoytick.getRawAxis(OIConstants.kDriverRotAxis),
       () -> !yButton.getAsBoolean()));//driverJoytick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
 
+    intake.setDefaultCommand(new IntakeWithTriggers(intake, lefTrigger, rightTrigger));
 
 
       SmartDashboard.putBoolean("Field Centric", yButton.getAsBoolean());
-    
-      
+
       Autos.Straight(swerveSubsystem).setName("Straight");
       Autos.RunIntakeandTraj(swerveSubsystem, intake).setName("Intake");
+      
       auto_chooser.setDefaultOption("Auto 1", Autos.Straight(swerveSubsystem));
       auto_chooser.addOption("Auto 2", Autos.RunIntakeandTraj(swerveSubsystem, intake));
       SmartDashboard.putData(auto_chooser);
