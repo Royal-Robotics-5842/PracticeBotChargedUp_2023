@@ -6,12 +6,12 @@ package frc.robot;
 
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.IntakeWithTriggers;
+//import frc.robot.commands.IntakeWithTriggers;
 import frc.robot.commands.SwerveDriveJoystick;
 import frc.robot.commands.ZeroHeading;
 import frc.robot.commands.setTo45;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.IntakeSubsytem;
+//import frc.robot.subsystems.IntakeSubsytem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -31,11 +31,10 @@ public class RobotContainer {
   public final Joystick driverJoytick = new Joystick(OIConstants.kDriverControllerPort);
   private final ZeroHeading zeroHeading = new ZeroHeading(swerveSubsystem);
   private final setTo45 setTo45 = new setTo45(swerveSubsystem);
-  private final IntakeSubsytem intake = new IntakeSubsytem();
+  //private final IntakeSubsytem intake = new IntakeSubsytem();
 
   //All our controller stuff!
   private final CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
-  private final Trigger yButton = m_driverController.y();
   private final double lefTrigger = m_driverController.getLeftTriggerAxis();
   private final double rightTrigger = m_driverController.getRightTriggerAxis();
 
@@ -49,18 +48,20 @@ public class RobotContainer {
       () -> -driverJoytick.getRawAxis(OIConstants.kDriverYAxis),
       () -> -driverJoytick.getRawAxis(OIConstants.kDriverXAxis),
       () -> driverJoytick.getRawAxis(OIConstants.kDriverRotAxis),
-      () -> !yButton.getAsBoolean()));//driverJoytick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
+      () -> !m_driverController.y().getAsBoolean()));//driverJoytick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
 
-    intake.setDefaultCommand(new IntakeWithTriggers(intake, lefTrigger, rightTrigger));
+    //intake.setDefaultCommand(new IntakeWithTriggers(intake, lefTrigger, rightTrigger));
 
 
-      SmartDashboard.putBoolean("Field Centric", yButton.getAsBoolean());
+      SmartDashboard.putBoolean("Field Centric", !m_driverController.y().getAsBoolean());
 
       Autos.Straight(swerveSubsystem).setName("Straight");
-      Autos.RunIntakeandTraj(swerveSubsystem, intake).setName("Intake");
+      //Autos.RunIntakeandTraj(swerveSubsystem, intake).setName("Intake");
 
       auto_chooser.setDefaultOption("No Intake - Side", Autos.Straight(swerveSubsystem));
-      auto_chooser.addOption("Yes Intake - Side", Autos.RunIntakeandTraj(swerveSubsystem, intake));
+      //auto_chooser.addOption("Yes Intake - Side", Autos.RunIntakeandTraj(swerveSubsystem, intake));
+      //auto_chooser.addOption("Yes Intake - Balance", Autos.RunIntakeandAutoBalance(swerveSubsystem, intake));
+      auto_chooser.addOption("back", Autos.StraightBack(swerveSubsystem));
       SmartDashboard.putData(auto_chooser);
     configureBindings();
   }

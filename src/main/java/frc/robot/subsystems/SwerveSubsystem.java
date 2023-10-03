@@ -130,7 +130,7 @@ public void resetOdometry(Pose2d pose) {
   @Override
   public void periodic() {
 
-    odometer.update(getRotation2d(), new SwerveModulePosition[] {
+      odometer.update(getRotation2d(), new SwerveModulePosition[] {
       frontLeft.getPosition(),
       frontRight.getPosition(),
       backLeft.getPosition(),
