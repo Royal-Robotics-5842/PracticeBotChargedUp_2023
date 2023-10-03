@@ -108,7 +108,7 @@ public class Robot extends TimedRobot {
   public void simulationInit() 
   {
     Encoder encoder = new Encoder(2, 3);
-// create a sim controller for the encoder
+    // create a sim controller for the encoder
     EncoderSim simEncoder = new EncoderSim(encoder);
   }
 
