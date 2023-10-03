@@ -91,7 +91,7 @@ public final class Autos {
       {
         return Commands.sequence(
                   new InstantCommand(() -> intake.setSpeed(1)), new WaitCommand(5), new InstantCommand(() -> intake.stopMotors()),
-                  Straight(swerveSubsystem).unless(swerveSubsystem.gyro.getPitch() > 4));
+                  Straight(swerveSubsystem).unless(() -> swerveSubsystem.gyro.getPitch() > 4));
       } 
       
   
