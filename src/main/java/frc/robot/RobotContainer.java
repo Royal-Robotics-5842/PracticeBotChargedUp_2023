@@ -59,8 +59,8 @@ public class RobotContainer {
       Autos.Straight(swerveSubsystem).setName("Straight");
       Autos.RunIntakeandTraj(swerveSubsystem, intake).setName("Intake");
 
-      auto_chooser.setDefaultOption("Auto 1", Autos.Straight(swerveSubsystem));
-      auto_chooser.addOption("Auto 2", Autos.RunIntakeandTraj(swerveSubsystem, intake));
+      auto_chooser.setDefaultOption("No Intake - Side", Autos.Straight(swerveSubsystem));
+      auto_chooser.addOption("Yes Intake - Side", Autos.RunIntakeandTraj(swerveSubsystem, intake));
       SmartDashboard.putData(auto_chooser);
     configureBindings();
   }

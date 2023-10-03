@@ -10,6 +10,7 @@ import frc.robot.subsystems.IntakeSubsytem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 import java.util.ArrayList;
+import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -29,7 +30,6 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public final class Autos {
   /** Example static factory for an autonomous command. */
-
 
   public static CommandBase Straight(SwerveSubsystem swerveSubsystem) {
         // 1. Create trajectory settings
@@ -84,7 +84,14 @@ public final class Autos {
       public static CommandBase RunIntakeandTraj(SwerveSubsystem swerveSubsystem, IntakeSubsytem intake)
       {
         return Commands.sequence(
-                  new InstantCommand(() -> intake.setSpeed(1)), new WaitCommand(5), Straight(swerveSubsystem));
+                  new InstantCommand(() -> intake.setSpeed(1)), new WaitCommand(5), new InstantCommand(() -> intake.stopMotors()), Straight(swerveSubsystem));
+      } 
+
+      public static CommandBase RunIntakeandAutoBalance(SwerveSubsystem swerveSubsystem, IntakeSubsytem intake)
+      {
+        return Commands.sequence(
+                  new InstantCommand(() -> intake.setSpeed(1)), new WaitCommand(5), new InstantCommand(() -> intake.stopMotors()),
+                  Straight(swerveSubsystem).unless(swerveSubsystem.gyro.getPitch() > 4));
       } 
       
   
