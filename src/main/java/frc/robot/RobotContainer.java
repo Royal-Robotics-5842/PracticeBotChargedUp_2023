@@ -8,6 +8,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.StopSwerveModule;
 //import frc.robot.commands.IntakeWithTriggers;
 import frc.robot.commands.SwerveDriveJoystick;
 import frc.robot.commands.ZeroHeading;
@@ -34,6 +35,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -44,19 +46,25 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
+  // The robot's subsystems are defined here...
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
-  public final static Joystick driverJoytick = new Joystick(OIConstants.kDriverControllerPort);
-  private final ZeroHeading zeroHeading = new ZeroHeading(swerveSubsystem);
   private final IntakeSubsytem intake = new IntakeSubsytem();
+
+
+  //THe robot's commands are defined here...
+  private final ZeroHeading zeroHeading = new ZeroHeading(swerveSubsystem);
+  private final StopSwerveModule stopSwerve = new StopSwerveModule(swerveSubsystem);
   //private final IntakeSetSpeed iSetSpeed = new IntakeSetSpeed(intake, 0);
 
+
   //All our controller stuff!
+  public final static Joystick driverJoytick = new Joystick(OIConstants.kDriverControllerPort);
   private final static CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
   public final static double lefTrigger = m_driverController.getLeftTriggerAxis();
   public final static double rightTrigger = m_driverController.getRightTriggerAxis();
 
-  static SendableChooser<Command> auto_chooser = new SendableChooser<>(); //Initializing the autonomous chooser 
+
+  static SendableChooser<Command> auto_chooser = new SendableChooser<>(); //Initializing the autonomous chooser on smartdashboard
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -72,11 +80,11 @@ public class RobotContainer {
 
 
       SmartDashboard.putBoolean("Field Centric", !m_driverController.y().getAsBoolean());
+      SmartDashboard.putNumber("Robot Pitch", swerveSubsystem.gyro.getPitch());
 
 
       auto_chooser.setDefaultOption("No Intake - Straight Side", Autos.Straight(swerveSubsystem));
       auto_chooser.addOption("Side_DriveStraight", Autos.Side_DriveStraight(swerveSubsystem, intake));
-
       auto_chooser.addOption("Middle_AutoBalance", Autos. Middle_AutoBalance(swerveSubsystem, intake));
       auto_chooser.addOption("back -- THIS IS FOR TESTING DO NOT RUN THIS AT ALL", Autos.StraightBack(swerveSubsystem));
       SmartDashboard.putData(auto_chooser);
@@ -97,7 +105,8 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_driverController.a().onTrue(zeroHeading);   
+    m_driverController.a().onTrue(zeroHeading); 
+    m_driverController.x().onTrue(stopSwerve);
   }
     
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`

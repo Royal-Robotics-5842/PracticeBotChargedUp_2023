@@ -40,7 +40,7 @@ public class AutoBalance extends CommandBase {
 
       
       SmartDashboard.putNumber("AutoBalancePower", autoBalancePID.calculate(swerve.gyro.getPitch(), 0));
-      SmartDashboard.putNumber("RobotPitch", swerve.gyro.getPitch());
+
       
   }
 
