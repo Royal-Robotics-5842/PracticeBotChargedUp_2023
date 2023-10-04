@@ -9,10 +9,10 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-/* */
+
 public class IntakeSubsytem extends SubsystemBase {
-  private final CANSparkMax rightMotor = new CANSparkMax(39, MotorType.kBrushless);
-  private final CANSparkMax leftMotor = new CANSparkMax(38, MotorType.kBrushless);
+  public final CANSparkMax rightMotor = new CANSparkMax(39, MotorType.kBrushless);
+  public final CANSparkMax leftMotor = new CANSparkMax(38, MotorType.kBrushless);
 
   public IntakeSubsytem() 
   {

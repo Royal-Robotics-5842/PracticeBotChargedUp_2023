@@ -7,6 +7,7 @@ package frc.robot.commands;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.AutoCommands.AutoBalance;
+//import frc.robot.commands.AutoCommands.AutoBalance;
 import frc.robot.commands.AutoCommands.IntakeSetSpeed;
 import frc.robot.subsystems.IntakeSubsytem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -23,20 +24,21 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-
 public final class Autos {
-  /** Example static factory for an autonomous command. */
+
 
   private final static SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
-  private final static IntakeSubsytem intake = new IntakeSubsytem();
+  //private final static IntakeSubsytem intake = new IntakeSubsytem();
 
-
+/*
   public static CommandBase Straight(SwerveSubsystem swerveSubsystem) {
                 // 1. Create trajectory settings
                 TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
@@ -134,19 +136,23 @@ public final class Autos {
                                   swerveControllerCommand,
                                   new InstantCommand(() -> swerveSubsystem.stopModules()));
       }
-
+      */
+    
       
       public static CommandBase Side_DriveStraight(SwerveSubsystem swerveSubsystem, IntakeSubsytem intake)
       {
-        return Commands.sequence(new IntakeSetSpeed(intake, 1), new WaitCommand(5), new IntakeSetSpeed(intake, 0), Straight(swerveSubsystem));
+        return new RunCommand(() -> swerveSubsystem.autoBalance(), swerveSubsystem);//   new AutoBalance(swerveSubsystem)); //intake.setSpeed(1), intake), new WaitCommand(5), new IntakeSetSpeed(intake, 0));// Straight(swerveSubsystem));
       } 
-
+      
+/*  
       public static CommandBase Middle_AutoBalance(SwerveSubsystem swerveSubsystem, IntakeSubsytem intake)
       {
         return Commands.sequence(
                   new IntakeSetSpeed(intake, 1 ), new WaitCommand(5), new IntakeSetSpeed(intake, 0 ),
                   Straight(swerveSubsystem).until(() -> swerveSubsystem.gyro.getPitch() > 6).andThen(new AutoBalance(swerveSubsystem)));
       } 
+      */
+      
       
       
   
@@ -156,5 +162,5 @@ public final class Autos {
 
   }
 
-  
+
 }

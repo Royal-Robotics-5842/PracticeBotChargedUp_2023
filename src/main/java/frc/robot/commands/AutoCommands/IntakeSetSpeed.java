@@ -11,7 +11,7 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.IntakeSubsytem;
 
 public class IntakeSetSpeed extends CommandBase {
-  /** Creates a new IntakeSetSpeed. */
+ 
   public final IntakeSubsytem intake;
   public double intakeSpeed;
   public IntakeSetSpeed(IntakeSubsytem intake, double speed) {

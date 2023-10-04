@@ -10,30 +10,34 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class AutoBalance extends CommandBase {
-  /** Creates a new AutoBalance. */
+  
   private final SwerveSubsystem swerve;
   public final PIDController autoBalancePID = new PIDController(0, 0, 0);
 
-  public AutoBalance(SwerveSubsystem swerveSubsystem) 
+  public AutoBalance(SwerveSubsystem swerve) 
   {
-    swerve = swerveSubsystem;
+    this.swerve = swerve;
     addRequirements(swerve);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() 
+  {
+
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() 
   {
       double output = autoBalancePID.calculate(swerve.gyro.getPitch(), 0);
-      swerve.frontLeft.setSpeedDrive(output);
+      //swerve.frontLeft.setSpeedDrive(output);
       swerve.frontRight.setSpeedDrive(output);
       swerve.backLeft.setSpeedDrive(output);
       swerve.backRight.setSpeedDrive(output);
+      
 
       SmartDashboard.putNumber("AutoBalancePower", autoBalancePID.calculate(swerve.gyro.getPitch(), 0));
   }
@@ -56,3 +60,4 @@ public class AutoBalance extends CommandBase {
     return (swerve.gyro.getPitch() <= 1);
   }
 }
+
