@@ -10,6 +10,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -91,6 +92,7 @@ public class SwerveDriveJoystick extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return Math.abs(RobotContainer.driverJoytick.getRawAxis(OIConstants.kDriverYAxis)) <= 0.1 && 
+           Math.abs(RobotContainer.driverJoytick.getRawAxis(OIConstants.kDriverXAxis)) <= 0.1;
   }
 }
