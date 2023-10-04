@@ -138,11 +138,12 @@ public final class Autos {
       }
       */
     
-      
+      /*
       public static CommandBase Side_DriveStraight(SwerveSubsystem swerveSubsystem, IntakeSubsytem intake)
       {
         return new RunCommand(() -> swerveSubsystem.autoBalance(), swerveSubsystem);//   new AutoBalance(swerveSubsystem)); //intake.setSpeed(1), intake), new WaitCommand(5), new IntakeSetSpeed(intake, 0));// Straight(swerveSubsystem));
       } 
+      
       
 /*  
       public static CommandBase Middle_AutoBalance(SwerveSubsystem swerveSubsystem, IntakeSubsytem intake)

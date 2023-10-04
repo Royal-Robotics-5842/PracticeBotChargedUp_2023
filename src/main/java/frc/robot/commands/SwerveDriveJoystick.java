@@ -86,7 +86,7 @@ public class SwerveDriveJoystick extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    swerveSubsystem.stopModules();
+    //swerveSubsystem.stopModules();
   }
 
   // Returns true when the command should end.

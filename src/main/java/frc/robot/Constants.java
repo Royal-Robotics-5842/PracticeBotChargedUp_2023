@@ -66,7 +66,7 @@ public final class Constants {
       public static final boolean kFrontLeftDriveMotorReversed = true;
       public static final boolean kBackLeftDriveMotorReversed = false;
       public static final boolean kFrontRightDriveMotorReversed = true;
-      public static final boolean kBackRightDriveMotorReversed = true;
+      public static final boolean kBackRightDriveMotorReversed = false;
 
       public static final int kFrontLeftTurnAbsoluteEncoderPort = 33;
       public static final int kBackLeftTurnAbsoluteEncoderPort = 35;

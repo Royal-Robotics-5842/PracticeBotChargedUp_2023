@@ -73,7 +73,7 @@ public class RobotContainer {
       swerveSubsystem,
       () -> -driverJoytick.getRawAxis(OIConstants.kDriverYAxis),
       () -> -driverJoytick.getRawAxis(OIConstants.kDriverXAxis),
-      () -> driverJoytick.getRawAxis(OIConstants.kDriverRotAxis),
+      () ->  driverJoytick.getRawAxis(OIConstants.kDriverRotAxis),
       () -> !m_driverController.y().getAsBoolean()));//driverJoytick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
 
     //intake.setDefaultCommand(new IntakeWithTriggers(intake, lefTrigger, rightTrigger));
@@ -124,7 +124,7 @@ public class RobotContainer {
    * @return the scommand to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return auto_chooser.getSelected();
+    return drive;
   }
 }
 
