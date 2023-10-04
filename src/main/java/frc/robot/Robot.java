@@ -59,7 +59,7 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() 
   {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-    SmartDashboard.putString("Current Autonomous", m_autonomousCommand.getName());
+    SmartDashboard.putString("Current Autonomous", RobotContainer.auto_chooser.getSelected().getName());
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */

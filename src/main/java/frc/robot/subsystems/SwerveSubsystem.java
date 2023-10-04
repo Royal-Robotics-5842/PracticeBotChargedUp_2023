@@ -69,7 +69,6 @@ public class SwerveSubsystem extends SubsystemBase {
         }
     }).start();
 
-        SmartDashboard.putData("Field", m_field);
 }
 
 
@@ -137,8 +136,8 @@ public void resetOdometry(Pose2d pose) {
       backLeft.getPosition(),
       backRight.getPosition()});
 
-    SmartDashboard.putNumber("Robot Heading", getHeading());
     SmartDashboard.putString("Robot Location", getPose().toString());
+   
     
     m_field.setRobotPose(odometer.getPoseMeters());
   }

@@ -37,9 +37,11 @@ public class AutoBalance extends CommandBase {
       swerve.frontRight.setSpeedDrive(output);
       swerve.backLeft.setSpeedDrive(output);
       swerve.backRight.setSpeedDrive(output);
-      
 
+      
       SmartDashboard.putNumber("AutoBalancePower", autoBalancePID.calculate(swerve.gyro.getPitch(), 0));
+      SmartDashboard.putNumber("RobotPitch", swerve.gyro.getPitch());
+      
   }
 
   // Called once the command ends or is interrupted.

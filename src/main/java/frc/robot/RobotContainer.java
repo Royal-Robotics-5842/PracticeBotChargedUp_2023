@@ -11,7 +11,6 @@ import frc.robot.commands.Autos;
 //import frc.robot.commands.IntakeWithTriggers;
 import frc.robot.commands.SwerveDriveJoystick;
 import frc.robot.commands.ZeroHeading;
-import frc.robot.commands.setTo45;
 //import frc.robot.commands.AutoCommands.AutoBalance;
 //import frc.robot.commands.AutoCommands.IntakeSetSpeed;
 import frc.robot.subsystems.IntakeSubsytem;
@@ -49,14 +48,7 @@ public class RobotContainer {
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   public final static Joystick driverJoytick = new Joystick(OIConstants.kDriverControllerPort);
   private final ZeroHeading zeroHeading = new ZeroHeading(swerveSubsystem);
-  private final setTo45 setTo45 = new setTo45(swerveSubsystem);
   private final IntakeSubsytem intake = new IntakeSubsytem();
-  private final SwerveDriveJoystick drive = (new SwerveDriveJoystick(
-    swerveSubsystem,
-    () -> -driverJoytick.getRawAxis(OIConstants.kDriverYAxis),
-    () -> -driverJoytick.getRawAxis(OIConstants.kDriverXAxis),
-    () -> driverJoytick.getRawAxis(OIConstants.kDriverRotAxis),
-    () -> !m_driverController.y().getAsBoolean()));
   //private final IntakeSetSpeed iSetSpeed = new IntakeSetSpeed(intake, 0);
 
   //All our controller stuff!
@@ -64,7 +56,7 @@ public class RobotContainer {
   public final static double lefTrigger = m_driverController.getLeftTriggerAxis();
   public final static double rightTrigger = m_driverController.getRightTriggerAxis();
 
-  SendableChooser<Command> auto_chooser = new SendableChooser<>(); //Initializing the autonomous chooser 
+  static SendableChooser<Command> auto_chooser = new SendableChooser<>(); //Initializing the autonomous chooser 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -76,20 +68,20 @@ public class RobotContainer {
       () ->  driverJoytick.getRawAxis(OIConstants.kDriverRotAxis),
       () -> !m_driverController.y().getAsBoolean()));//driverJoytick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
 
-    //intake.setDefaultCommand(new IntakeWithTriggers(intake, lefTrigger, rightTrigger));
+      //intake.setDefaultCommand(new IntakeWithTriggers(intake, lefTrigger, rightTrigger));
 
 
       SmartDashboard.putBoolean("Field Centric", !m_driverController.y().getAsBoolean());
-  
 
-      //Autos.Straight(swerveSubsystem).setName("Straight");
-      //Autos.RunIntakeandTraj(swerveSubsystem, intake).setName("Intake");
 
-      //auto_chooser.setDefaultOption("No Intake - Straight Side", Autos.Straight(swerveSubsystem));
-      //auto_chooser.setDefaultOption("Side_DriveStraight", Autos.Side_DriveStraight(swerveSubsystem, intake));
-      //auto_chooser.addOption("Middle_AutoBalance", Autos. Middle_AutoBalance(swerveSubsystem, intake));
-      //auto_chooser.addOption("back -- THIS IS FOR TESTING DO NOT RUN THIS AT ALL", Autos.StraightBack(swerveSubsystem));
-      //SmartDashboard.putData(auto_chooser);
+      auto_chooser.setDefaultOption("No Intake - Straight Side", Autos.Straight(swerveSubsystem));
+      auto_chooser.addOption("Side_DriveStraight", Autos.Side_DriveStraight(swerveSubsystem, intake));
+
+      auto_chooser.addOption("Middle_AutoBalance", Autos. Middle_AutoBalance(swerveSubsystem, intake));
+      auto_chooser.addOption("back -- THIS IS FOR TESTING DO NOT RUN THIS AT ALL", Autos.StraightBack(swerveSubsystem));
+      SmartDashboard.putData(auto_chooser);
+
+
 
     configureBindings();
   }
@@ -105,9 +97,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_driverController.a().onTrue(zeroHeading); 
-    m_driverController.x().onTrue(setTo45);
-  
+    m_driverController.a().onTrue(zeroHeading);   
   }
     
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
@@ -124,7 +114,7 @@ public class RobotContainer {
    * @return the scommand to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return drive;
+    return auto_chooser.getSelected();
   }
 }
 

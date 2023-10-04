@@ -34,12 +34,9 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public final class Autos {
 
-
-  private final static SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   //private final static IntakeSubsytem intake = new IntakeSubsytem();
 
-/*
-  public static CommandBase Straight(SwerveSubsystem swerveSubsystem) {
+  public static Command Straight(SwerveSubsystem swerveSubsystem) {
                 // 1. Create trajectory settings
                 TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
                   AutoConstants.kMaxSpeedMetersPerSecond,
@@ -88,7 +85,7 @@ public final class Autos {
                             new InstantCommand(() -> swerveSubsystem.stopModules()));
       }
 
-      public static CommandBase StraightBack(SwerveSubsystem swerveSubsystem) {
+      public static Command StraightBack(SwerveSubsystem swerveSubsystem) {
                       // 1. Create trajectory settings
                       TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
                         AutoConstants.kMaxSpeedMetersPerSecond,
@@ -136,23 +133,19 @@ public final class Autos {
                                   swerveControllerCommand,
                                   new InstantCommand(() -> swerveSubsystem.stopModules()));
       }
-      */
-    
-      /*
-      public static CommandBase Side_DriveStraight(SwerveSubsystem swerveSubsystem, IntakeSubsytem intake)
+
+      public static Command Side_DriveStraight(SwerveSubsystem swerveSubsystem, IntakeSubsytem intake)
       {
-        return new RunCommand(() -> swerveSubsystem.autoBalance(), swerveSubsystem);//   new AutoBalance(swerveSubsystem)); //intake.setSpeed(1), intake), new WaitCommand(5), new IntakeSetSpeed(intake, 0));// Straight(swerveSubsystem));
+        return Commands.sequence(new IntakeSetSpeed(intake, 1), new WaitCommand(5), new IntakeSetSpeed(intake, 0), Straight(swerveSubsystem));
       } 
+ 
       
-      
-/*  
-      public static CommandBase Middle_AutoBalance(SwerveSubsystem swerveSubsystem, IntakeSubsytem intake)
+      public static Command Middle_AutoBalance(SwerveSubsystem swerveSubsystem, IntakeSubsytem intake)
       {
         return Commands.sequence(
                   new IntakeSetSpeed(intake, 1 ), new WaitCommand(5), new IntakeSetSpeed(intake, 0 ),
                   Straight(swerveSubsystem).until(() -> swerveSubsystem.gyro.getPitch() > 6).andThen(new AutoBalance(swerveSubsystem)));
       } 
-      */
       
       
       
