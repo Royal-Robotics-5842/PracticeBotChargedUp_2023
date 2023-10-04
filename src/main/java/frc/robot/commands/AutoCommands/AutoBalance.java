@@ -50,7 +50,8 @@ public class AutoBalance extends CommandBase {
 
   // Returns true when the command should end.
   @Override
-  public boolean isFinished() {
+  public boolean isFinished() 
+  {
     SmartDashboard.putBoolean("AutoBalance?", swerve.gyro.getPitch() <= 1);
     return (swerve.gyro.getPitch() <= 1);
   }
