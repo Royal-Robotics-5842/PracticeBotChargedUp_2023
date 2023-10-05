@@ -48,8 +48,7 @@ public class SwerveSubsystem extends SubsystemBase {
             DriveConstants.kBackRightTurnAbsoluteEncoderPort);
 
     public final AHRS gyro = new AHRS(SPI.Port.kMXP);
-    public final PIDController autoBalancePID = new PIDController(0,0, 0);
-
+ 
     private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics,
     new Rotation2d(0),  new SwerveModulePosition[] {
       frontLeft.getPosition(),
@@ -116,16 +115,6 @@ public void resetOdometry(Pose2d pose) {
     backRight.setDesiredState(desiredStates[3]);
   }
 
-  public void autoBalance()
-  {
-    double output = autoBalancePID.calculate(gyro.getPitch(), 0);
-      frontLeft.setSpeedDrive(output);
-      frontRight.setSpeedDrive(output);
-      backLeft.setSpeedDrive(output);
-      backRight.setSpeedDrive(output);
-  }
-
-
 
   @Override
   public void periodic() {
@@ -137,6 +126,7 @@ public void resetOdometry(Pose2d pose) {
       backRight.getPosition()});
 
     SmartDashboard.putString("Robot Location", getPose().toString());
+    SmartDashboard.putBoolean("AutoBalance?", gyro.getPitch() <= 1);
    
     
     m_field.setRobotPose(odometer.getPoseMeters());

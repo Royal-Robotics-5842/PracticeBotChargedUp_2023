@@ -12,7 +12,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class AutoBalance extends CommandBase {
   
   private final SwerveSubsystem swerve;
-  public final PIDController autoBalancePID = new PIDController(0, 0, 0);
+  public final PIDController autoBalancePID = new PIDController(0.1, 0, 0);
 
   public AutoBalance(SwerveSubsystem swerve) 
   {
@@ -33,7 +33,7 @@ public class AutoBalance extends CommandBase {
   public void execute() 
   {
       double output = autoBalancePID.calculate(swerve.gyro.getPitch(), 0);
-      //swerve.frontLeft.setSpeedDrive(output);
+      swerve.frontLeft.setSpeedDrive(output);
       swerve.frontRight.setSpeedDrive(output);
       swerve.backLeft.setSpeedDrive(output);
       swerve.backRight.setSpeedDrive(output);
@@ -58,7 +58,6 @@ public class AutoBalance extends CommandBase {
   @Override
   public boolean isFinished() 
   {
-    SmartDashboard.putBoolean("AutoBalance?", swerve.gyro.getPitch() <= 1);
     return (swerve.gyro.getPitch() <= 1);
   }
 }
