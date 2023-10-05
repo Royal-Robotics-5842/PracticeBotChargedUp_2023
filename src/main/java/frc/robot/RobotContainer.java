@@ -6,6 +6,8 @@ package frc.robot;
 
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.EverythingSwerve.SetToAngle0;
+import frc.robot.commands.EverythingSwerve.SetToX;
 import frc.robot.commands.EverythingSwerve.StopSwerveModule;
 import frc.robot.commands.EverythingSwerve.SwerveDriveJoystick;
 import frc.robot.commands.EverythingSwerve.ZeroHeading;
@@ -33,6 +35,8 @@ public class RobotContainer {
   //THe robot's commands are defined here...
   private final ZeroHeading zeroHeading = new ZeroHeading(swerveSubsystem);
   private final StopSwerveModule stopSwerve = new StopSwerveModule(swerveSubsystem);
+  private final SetToAngle0 setTo0 = new SetToAngle0(swerveSubsystem);
+  private final SetToX setToX = new SetToX(swerveSubsystem);
   //private final IntakeSetSpeed iSetSpeed = new IntakeSetSpeed(intake, 0);
 
 
@@ -65,7 +69,7 @@ public class RobotContainer {
       auto_chooser.setDefaultOption("No Intake - Straight Side", Autos.Straight(swerveSubsystem));
       auto_chooser.addOption("Side_DriveStraight", Autos.Side_DriveStraight(swerveSubsystem, intake));
       auto_chooser.addOption("Middle_AutoBalance", Autos. Middle_AutoBalance(swerveSubsystem, intake));
-      auto_chooser.addOption("back -- THIS IS FOR TESTING DO NOT RUN THIS AT ALL", Autos.StraightBack(swerveSubsystem));
+      //auto_chooser.addOption("back -- THIS IS FOR TESTING DO NOT RUN THIS AT ALL", Autos.StraightBack(swerveSubsystem));
       SmartDashboard.putData(auto_chooser);
 
 
@@ -85,7 +89,8 @@ public class RobotContainer {
    */
   private void configureBindings() {
     m_driverController.a().onTrue(zeroHeading); 
-    m_driverController.x().onTrue(stopSwerve);
+    m_driverController.x().onTrue(setToX);
+    m_driverController.b().onTrue(setTo0);
   }
     
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`

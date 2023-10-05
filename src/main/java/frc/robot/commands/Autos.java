@@ -9,6 +9,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.AutoCommands.AutoBalance;
 //import frc.robot.commands.AutoCommands.AutoBalance;
 import frc.robot.commands.AutoCommands.IntakeSetSpeed;
+import frc.robot.commands.EverythingSwerve.SetToX;
 import frc.robot.subsystems.IntakeSubsytem;
 import frc.robot.subsystems.SwerveSubsystem;
 
@@ -80,7 +81,7 @@ public final class Autos {
                             swerveControllerCommand,
                             new InstantCommand(() -> swerveSubsystem.stopModules()));
       }
-
+/*
       public static Command StraightBack(SwerveSubsystem swerveSubsystem) {
                       // 1. Create trajectory settings
                       TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
@@ -129,23 +130,22 @@ public final class Autos {
                                   swerveControllerCommand,
                                   new InstantCommand(() -> swerveSubsystem.stopModules()));
       }
-
+*/
       public static Command Side_DriveStraight(SwerveSubsystem swerveSubsystem, IntakeSubsytem intake)
       {
-        return Commands.sequence(new IntakeSetSpeed(intake, 1), new WaitCommand(5), new IntakeSetSpeed(intake, 0), Straight(swerveSubsystem));
+        return Commands.sequence(new IntakeSetSpeed(intake, 1), new WaitCommand(5), new IntakeSetSpeed(intake, 0),
+                                Straight(swerveSubsystem));
       } 
  
       
       public static Command Middle_AutoBalance(SwerveSubsystem swerveSubsystem, IntakeSubsytem intake)
       {
-        return Commands.sequence(
-                  new IntakeSetSpeed(intake, 1 ), new WaitCommand(5), new IntakeSetSpeed(intake, 0 ),
-                  Straight(swerveSubsystem).until(() -> swerveSubsystem.gyro.getPitch() > 6).andThen(new AutoBalance(swerveSubsystem)));
+        return Commands.sequence(new IntakeSetSpeed(intake, 1 ), new WaitCommand(5), new IntakeSetSpeed(intake, 0 ),
+                                Straight(swerveSubsystem).until(() -> swerveSubsystem.gyro.getPitch() > 6).andThen(new AutoBalance(swerveSubsystem),
+                                new SetToX(swerveSubsystem)));
       } 
       
       
-      
-  
 
   private Autos() {
     throw new UnsupportedOperationException("This is a utility class!");

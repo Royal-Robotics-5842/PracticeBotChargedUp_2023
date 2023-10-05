@@ -116,4 +116,11 @@ public class SwerveModule {
         turningMotor.set(0);
     }
 
+    public void setToAngle(double angle)
+    {
+        turningMotor.set(turningPidController.calculate(getTurningPosition(), angle));
+    }
+
+
+
 }

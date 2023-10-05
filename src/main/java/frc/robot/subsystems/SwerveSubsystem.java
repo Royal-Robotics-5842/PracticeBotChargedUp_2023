@@ -126,7 +126,7 @@ public void resetOdometry(Pose2d pose) {
 
     SmartDashboard.putString("Robot Location", getPose().toString());
     SmartDashboard.putBoolean("AutoBalance?", gyro.getPitch() <= 1);
-   
+    SmartDashboard.putData(m_field);
     
     m_field.setRobotPose(odometer.getPoseMeters());
   }
