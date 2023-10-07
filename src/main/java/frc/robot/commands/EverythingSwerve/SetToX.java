@@ -36,7 +36,7 @@ public class SetToX extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (swerve.frontLeft.getTurningPosition() == 35)
+    if (swerve.frontLeft.getTurningPosition() <= 36 && swerve.frontLeft.getTurningPosition() >= 34 )
     {
       System.out.print("Swerve to 0");
       return true;
