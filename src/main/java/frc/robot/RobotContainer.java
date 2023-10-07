@@ -6,7 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.IntakeWithTriggers;
+import frc.robot.commands.AutoCommands.IntakeWithTriggers;
 //import frc.robot.commands.AutoCommands.IntakeSetSpeed;
 import frc.robot.commands.EverythingSwerve.SetToAngle0;
 import frc.robot.commands.EverythingSwerve.SetToX;
@@ -32,7 +32,6 @@ public class RobotContainer {
   // The robot's subsystems are defined here...
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   private final IntakeSubsytem intake = new IntakeSubsytem();
-  private final IntakeWithTriggers intakeTriggers = new IntakeWithTriggers(intake, lefTrigger, rightTrigger); 
 
 
   //THe robot's commands are defined here...
@@ -62,7 +61,7 @@ public class RobotContainer {
       () ->  driverJoytick.getRawAxis(OIConstants.kDriverRotAxis),
       () -> !m_driverController.y().getAsBoolean()));//driverJoytick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
 
-      intake.setDefaultCommand(intakeTriggers);
+      intake.setDefaultCommand(new IntakeWithTriggers(intake, lefTrigger, rightTrigger));
 
 
       SmartDashboard.putBoolean("Field Centric", !m_driverController.y().getAsBoolean());
