@@ -36,7 +36,6 @@ public class RobotContainer {
 
   //THe robot's commands are defined here...
   private final ZeroHeading zeroHeading = new ZeroHeading(swerveSubsystem);
-  private final StopSwerveModule stopSwerve = new StopSwerveModule(swerveSubsystem);
   private final SetToAngle0 setTo0 = new SetToAngle0(swerveSubsystem);
   private final SetToX setToX = new SetToX(swerveSubsystem);
   //private final IntakeSetSpeed iSetSpeed = new IntakeSetSpeed(intake, 0);
