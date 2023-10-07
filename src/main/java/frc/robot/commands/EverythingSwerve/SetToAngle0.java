@@ -35,7 +35,7 @@ public class SetToAngle0 extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (swerve.frontLeft.getTurningPosition() == 0)
+    if (swerve.frontLeft.getTurningPosition() <= 1 && swerve.frontLeft.getTurningPosition() <= -0.5)
     {
       System.out.print("Swerve to 0");
       return true;

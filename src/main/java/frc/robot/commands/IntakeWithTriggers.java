@@ -17,6 +17,8 @@ public class IntakeWithTriggers extends CommandBase {
     this.intake = intake;
     leftTrigger = left;
     rightTrigger = right;
+    addRequirements(intake);
+
   }
 
   // Called when the command is initially scheduled.
@@ -31,7 +33,7 @@ public class IntakeWithTriggers extends CommandBase {
     {
       intake.setSpeed(-leftTrigger);
     }
-    if (rightTrigger > 0)
+    if (rightTrigger >= 0) // added a =
     {
       intake.setSpeed(rightTrigger);
     }

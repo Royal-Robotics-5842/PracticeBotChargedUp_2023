@@ -131,6 +131,7 @@ public final class Autos {
                                   new InstantCommand(() -> swerveSubsystem.stopModules()));
       }
 */
+
       public static Command Side_DriveStraight(SwerveSubsystem swerveSubsystem, IntakeSubsytem intake)
       {
         return Commands.sequence(new IntakeSetSpeed(intake, 1), new WaitCommand(5), new IntakeSetSpeed(intake, 0),
@@ -154,3 +155,4 @@ public final class Autos {
 
 
 }
+
