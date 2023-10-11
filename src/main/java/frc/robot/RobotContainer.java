@@ -6,7 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.AutoCommands.IntakeWithTriggers;
+import frc.robot.commands.EverythingSwerve.IntakeWithTriggers;
 //import frc.robot.commands.AutoCommands.IntakeSetSpeed;
 import frc.robot.commands.EverythingSwerve.SetToAngle0;
 import frc.robot.commands.EverythingSwerve.SetToX;
@@ -43,7 +43,7 @@ public class RobotContainer {
 
   //All our controller stuff!
   public final static Joystick driverJoytick = new Joystick(OIConstants.kDriverControllerPort);
-  private final static CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
+  public final static CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
   public final static double lefTrigger = m_driverController.getLeftTriggerAxis();
   public final static double rightTrigger = m_driverController.getRightTriggerAxis();
 

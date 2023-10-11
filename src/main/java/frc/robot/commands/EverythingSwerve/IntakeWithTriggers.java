@@ -2,9 +2,10 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.AutoCommands;
+package frc.robot.commands.EverythingSwerve;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.IntakeSubsytem;
 
 public class IntakeWithTriggers extends CommandBase {
@@ -29,13 +30,15 @@ public class IntakeWithTriggers extends CommandBase {
   @Override
   public void execute() 
   {
-    if (leftTrigger >= 0)
+    //System.out.println(RobotContainer.m_driverController.getLeftTriggerAxis() + " left : right " + RobotContainer.m_driverController.getRightTriggerAxis());
+    if (RobotContainer.m_driverController.getLeftTriggerAxis() >= 0)
     {
-      intake.setSpeed(-leftTrigger);
+      intake.setSpeed(RobotContainer.m_driverController.getLeftTriggerAxis() * -1);
+
     }
-    if (rightTrigger >= 0) // added a =
+    if (RobotContainer.m_driverController.getRightTriggerAxis() > 0) // added a =
     {
-      intake.setSpeed(rightTrigger);
+      intake.setSpeed(RobotContainer.m_driverController.getRightTriggerAxis() * 0.2);
     }
   }
 

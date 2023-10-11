@@ -24,6 +24,7 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
@@ -134,16 +135,15 @@ public final class Autos {
 
       public static Command Side_DriveStraight(SwerveSubsystem swerveSubsystem, IntakeSubsytem intake)
       {
-        return Commands.sequence(new IntakeSetSpeed(intake, 1), new WaitCommand(5), new IntakeSetSpeed(intake, 0),
-                                Straight(swerveSubsystem));
+        return Commands.sequence((new IntakeSetSpeed(intake,  .2, 5).withTimeout(5)).andThen(Straight(swerveSubsystem)));
       } 
- 
       
-      public static Command Middle_AutoBalance(SwerveSubsystem swerveSubsystem, IntakeSubsytem intake)
+      
+      public static CommandBase Middle_AutoBalance(SwerveSubsystem swerveSubsystem, IntakeSubsytem intake)
       {
-        return Commands.sequence(new IntakeSetSpeed(intake, 1 ), new WaitCommand(5), new IntakeSetSpeed(intake, 0 ),
+        return new InstantCommand(() -> intake.setSpeed(0.5)).andThen(new WaitCommand(5).andThen(
                                 Straight(swerveSubsystem).until(() -> swerveSubsystem.gyro.getPitch() > 6).andThen(new AutoBalance(swerveSubsystem),
-                                new SetToX(swerveSubsystem)));
+                                new SetToX(swerveSubsystem))));
       } 
       
       

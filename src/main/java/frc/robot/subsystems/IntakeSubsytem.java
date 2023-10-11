@@ -16,11 +16,12 @@ public class IntakeSubsytem extends SubsystemBase {
 
   public IntakeSubsytem() 
   {
-    rightMotor.setInverted(true);
-    leftMotor.setInverted(false);
-
+    
     rightMotor.restoreFactoryDefaults();
     leftMotor.restoreFactoryDefaults();
+
+    rightMotor.setInverted(true);
+    leftMotor.setInverted(false);
 
     rightMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
     leftMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
