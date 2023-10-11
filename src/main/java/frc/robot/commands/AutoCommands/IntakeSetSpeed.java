@@ -4,24 +4,35 @@
 
 package frc.robot.commands.AutoCommands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeSubsytem;
+
 
 public class IntakeSetSpeed extends CommandBase {
  
   public final IntakeSubsytem intake;
   public double intakeSpeed;
-  public IntakeSetSpeed(IntakeSubsytem intake, double speed) {
+  private double timeBeforeStop;
+  public Timer timer;
+  
+
+  public IntakeSetSpeed(IntakeSubsytem intake, double speed, double time) {
     this.intake = intake;
     intakeSpeed = speed;
+    timeBeforeStop = time;
     addRequirements(intake);
-    // Use addRequirements() here to declare subsystem dependencies.
+    // Use addRequirements() herex to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() 
+  {
+    //timer.reset();
+   timer.getFPGATimestamp();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -29,6 +40,7 @@ public class IntakeSetSpeed extends CommandBase {
   {
     intake.setSpeed(intakeSpeed);
     SmartDashboard.putBoolean("Intake With Triggers", (intakeSpeed) <= 0.1 && Math.abs(intakeSpeed) <= 0.1);
+    System.out.println(timer.getFPGATimestamp());
   }
 
   // Called once the command ends or is interrupted.
@@ -41,6 +53,10 @@ public class IntakeSetSpeed extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(intakeSpeed) <= 0.1 && Math.abs(intakeSpeed) <= 0.1);
+    //if (Timer.getMatchTime() >= timeBeforeStop)
+    //{
+    //  return true;
+    //}
+    return false;
   }
 }
