@@ -135,15 +135,15 @@ public final class Autos {
 
       public static Command Side_DriveStraight(SwerveSubsystem swerveSubsystem, IntakeSubsytem intake)
       {
-        return Commands.sequence((new IntakeSetSpeed(intake,  .2, 5).withTimeout(5)).andThen(Straight(swerveSubsystem)));
+        return Commands.sequence((new IntakeSetSpeed(intake,-1).withTimeout(5)).andThen(Straight(swerveSubsystem)));
       } 
       
       
       public static CommandBase Middle_AutoBalance(SwerveSubsystem swerveSubsystem, IntakeSubsytem intake)
       {
-        return new InstantCommand(() -> intake.setSpeed(0.5)).andThen(new WaitCommand(5).andThen(
-                                Straight(swerveSubsystem).until(() -> swerveSubsystem.gyro.getPitch() > 6).andThen(new AutoBalance(swerveSubsystem),
-                                new SetToX(swerveSubsystem))));
+        return Commands.sequence(new IntakeSetSpeed(intake,-1).withTimeout(2))
+                .andThen(Straight(swerveSubsystem).until(() -> swerveSubsystem.gyro.getPitch() > 6).andThen(new AutoBalance(swerveSubsystem)
+                .andThen(new SetToX(swerveSubsystem))));
       } 
       
       

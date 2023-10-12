@@ -15,13 +15,11 @@ public class IntakeSetSpeed extends CommandBase {
   public final IntakeSubsytem intake;
   public double intakeSpeed;
   private double timeBeforeStop;
-  public Timer timer;
-  
 
-  public IntakeSetSpeed(IntakeSubsytem intake, double speed, double time) {
+
+  public IntakeSetSpeed(IntakeSubsytem intake, double speed) {
     this.intake = intake;
     intakeSpeed = speed;
-    timeBeforeStop = time;
     addRequirements(intake);
     // Use addRequirements() herex to declare subsystem dependencies.
   }
@@ -31,7 +29,6 @@ public class IntakeSetSpeed extends CommandBase {
   public void initialize() 
   {
     //timer.reset();
-   timer.getFPGATimestamp();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -40,7 +37,6 @@ public class IntakeSetSpeed extends CommandBase {
   {
     intake.setSpeed(intakeSpeed);
     SmartDashboard.putBoolean("Intake With Triggers", (intakeSpeed) <= 0.1 && Math.abs(intakeSpeed) <= 0.1);
-    System.out.println(timer.getFPGATimestamp());
   }
 
   // Called once the command ends or is interrupted.

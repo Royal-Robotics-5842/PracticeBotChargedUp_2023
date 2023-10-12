@@ -116,6 +116,7 @@ public void resetOdometry(Pose2d pose) {
 
 
   @Override
+
   public void periodic() {
 
       odometer.update(getRotation2d(), new SwerveModulePosition[] {
@@ -127,6 +128,7 @@ public void resetOdometry(Pose2d pose) {
     SmartDashboard.putString("Robot Location", getPose().toString());
     SmartDashboard.putBoolean("AutoBalance?", gyro.getPitch() <= 1);
     SmartDashboard.putData(m_field);
+    SmartDashboard.putNumber("Pitch Of Robot", gyro.getPitch());
     
     m_field.setRobotPose(odometer.getPoseMeters());
   }
