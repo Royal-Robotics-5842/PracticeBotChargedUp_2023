@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.EverythingSwerve.IntakeWithTriggers;
@@ -16,8 +18,21 @@ import frc.robot.commands.EverythingSwerve.ZeroHeading;
 import frc.robot.subsystems.IntakeSubsytem;
 import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
+import java.io.IOException;
+import java.nio.file.Path;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -30,15 +45,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class RobotContainer {
   // The robot's subsystems are defined here...
-  private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  private final static SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   private final IntakeSubsytem intake = new IntakeSubsytem();
 
 
   //THe robot's commands are defined here...
   private final ZeroHeading zeroHeading = new ZeroHeading(swerveSubsystem);
   private final SetToAngle0 setTo0 = new SetToAngle0(swerveSubsystem);
-  private final SetToX setToX = new SetToX(swerveSubsystem);
-  //private final IntakeSetSpeed iSetSpeed = new IntakeSetSpeed(intake, 0);
+  private final SetToX setToX = new SetToX(swerveSubsystem); //ALWAYS RUN WITH TIMEOUT
 
 
   //All our controller stuff!
@@ -70,6 +84,8 @@ public class RobotContainer {
       auto_chooser.setDefaultOption("No Intake - Straight Side", Autos.Straight(swerveSubsystem));
       auto_chooser.addOption("Side_DriveStraight", Autos.Side_DriveStraight(swerveSubsystem, intake));
       auto_chooser.addOption("Middle_AutoBalance", Autos. Middle_AutoBalance(swerveSubsystem, intake));
+      auto_chooser.addOption("TESTTT", loadPathplannerTrajectoryToHolonomicCommand("C:\\Users\\royalrobotics\\Desktop\\PracticeBotChargedUp_2023\\src\\main\\deploy\\deploy\\pathplanner\\generatedJSON\\New Path.wpilib.json"
+      , true));
       //auto_chooser.addOption("back -- THIS IS FOR TESTING DO NOT RUN THIS AT ALL", Autos.StraightBack(swerveSubsystem));
       SmartDashboard.putData(auto_chooser);
 
@@ -78,35 +94,47 @@ public class RobotContainer {
     configureBindings();
   }
 
-  
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
+  public static Command loadPathplannerTrajectoryToHolonomicCommand(String filename, boolean resetOdomtry) {
+    Trajectory trajectory;
+    System.out.println("HIIIIIIIII");
+                ProfiledPIDController thetaController = new ProfiledPIDController(
+                        AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
+                thetaController.enableContinuousInput(-180, 180);
+
+    try {
+      Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(filename);
+      trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+    } catch (IOException exception) {
+      DriverStation.reportError("Unable to open trajectory" + filename, exception.getStackTrace());
+      System.out.println("Unable to read from file " + filename);
+      return new InstantCommand();
+    }
+    SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
+                  trajectory,
+                  swerveSubsystem::getPose,
+                  DriveConstants.kDriveKinematics,
+                  new PIDController(AutoConstants.kPXController, 0, 0),
+                  new PIDController(AutoConstants.kPYController, 0, 0),
+                  thetaController,
+                  swerveSubsystem::setModuleStates,
+                  swerveSubsystem);
+
+                if (resetOdomtry) {
+                  return new SequentialCommandGroup(
+                       new InstantCommand(() -> swerveSubsystem.resetOdometry(trajectory.getInitialPose())), swerveControllerCommand);
+                 } else {
+                   return swerveControllerCommand;
+                 }
+}
+
+
   private void configureBindings() {
     m_driverController.a().onTrue(zeroHeading); 
-    m_driverController.x().onTrue(setToX);
-    m_driverController.b().onTrue(setTo0);
+    m_driverController.x().onTrue(setToX.withTimeout(0.5));
+    m_driverController.b().onTrue(setTo0.withTimeout(0.5));
   }
     
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    // new Trigger(m_exampleSubsystem::exampleCondition)
-        // .onTrue(new ExampleCommand(m_exampleSubsystem));
-
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the scommand to run in autonomous
-   */
+    
   public Command getAutonomousCommand() {
     return auto_chooser.getSelected();
   }

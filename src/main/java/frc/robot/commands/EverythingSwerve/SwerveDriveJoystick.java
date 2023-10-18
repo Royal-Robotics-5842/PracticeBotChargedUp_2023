@@ -76,11 +76,12 @@ public class SwerveDriveJoystick extends CommandBase {
     
     // 6. Output each module states to wheels
     swerveSubsystem.setModuleStates(moduleStates);
-
+    /*
     System.out.println("FL Drive Encoder: " + swerveSubsystem.frontLeft.getDrivePosition());
     System.out.println("FR Drive Encoder: " + swerveSubsystem.frontRight.getDrivePosition());
     System.out.println("BL Drive Encoder: " + swerveSubsystem.backLeft.getDrivePosition());
     System.out.println("BR Drive Encoder: " + swerveSubsystem.backRight.getDrivePosition());
+    */
   }
   
   // Called once the command ends or is interrupted.

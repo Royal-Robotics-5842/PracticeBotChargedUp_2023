@@ -84,6 +84,12 @@ public class SwerveSubsystem extends SubsystemBase {
     //System.out.print("Bro: " + getHeading());
     return Rotation2d.fromDegrees(getHeading());
   }
+
+  public Rotation2d getRotation2dOdemeter()
+  {
+    //System.out.print("Bro: " + getHeading());
+    return Rotation2d.fromDegrees(-getHeading());
+  }
   
   public Pose2d getPose() {
     return odometer.getPoseMeters();
@@ -119,7 +125,7 @@ public void resetOdometry(Pose2d pose) {
 
   public void periodic() {
 
-      odometer.update(getRotation2d(), new SwerveModulePosition[] {
+      odometer.update(getRotation2dOdemeter (), new SwerveModulePosition[] {
       frontLeft.getPosition(),
       frontRight.getPosition(),
       backLeft.getPosition(),
