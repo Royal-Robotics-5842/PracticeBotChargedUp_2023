@@ -130,9 +130,11 @@ public class RobotContainer {
 
   private void configureBindings() {
     m_driverController.a().onTrue(zeroHeading); 
-    m_driverController.x().onTrue(setToX.withTimeout(0.5));
+    m_driverController.x().whileTrue(setToX);
     m_driverController.b().onTrue(setTo0.withTimeout(0.5));
+    System.out.println("HI)");
   }
+
     
     
   public Command getAutonomousCommand() {
