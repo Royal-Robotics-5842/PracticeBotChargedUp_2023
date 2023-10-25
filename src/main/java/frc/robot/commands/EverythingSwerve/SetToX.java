@@ -21,9 +21,9 @@ public class SetToX extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute(){
-    swerve.frontLeft.setToAngle(35);
+    swerve.frontLeft.setToAngle(45);
     swerve.frontRight.setToAngle(135);
-    swerve.backLeft.setToAngle(35);
+    swerve.backLeft.setToAngle(45);
     swerve.backRight.setToAngle(135);
   }
   
@@ -36,12 +36,6 @@ public class SetToX extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (swerve.frontLeft.getTurningPosition() <= 36 && swerve.frontLeft.getTurningPosition() >= 34 )
-    {
-      System.out.print("Swerve to 0");
-      return true;
-    }
-
     return false;
   }
 }
