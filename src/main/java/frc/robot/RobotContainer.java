@@ -86,8 +86,8 @@ public class RobotContainer {
       auto_chooser.setDefaultOption("No Intake - Straight Side", Autos.Straight(swerveSubsystem));
       auto_chooser.addOption("Side_DriveStraight", Autos.Side_DriveStraight(swerveSubsystem, intake));
       auto_chooser.addOption("Middle_AutoBalance", Autos. Middle_AutoBalance(swerveSubsystem, intake));
-      auto_chooser.addOption("TESTTT", loadPathplannerTrajectoryToHolonomicCommand("C:\\Users\\royalrobotics\\Desktop\\PracticeBotChargedUp_2023\\src\\main\\deploy\\deploy\\pathplanner\\generatedJSON\\New Path.wpilib.json"
-      , true));
+      //auto_chooser.addOption("TESTTT", loadPathplannerTrajectoryToHolonomicCommand("C:\\Users\\royalrobotics\\Desktop\\PracticeBotChargedUp_2023\\src\\main\\deploy\\deploy\\pathplanner\\generatedJSON\\New Path.wpilib.json"
+      //, true));
       //auto_chooser.addOption("back -- THIS IS FOR TESTING DO NOT RUN THIS AT ALL", Autos.StraightBack(swerveSubsystem));
       SmartDashboard.putData(auto_chooser);
 
@@ -95,7 +95,7 @@ public class RobotContainer {
 
     configureBindings();
   }
-
+/*
   public static Command loadPathplannerTrajectoryToHolonomicCommand(String filename, boolean resetOdomtry) {
     Trajectory trajectory;
     System.out.println("HIIIIIIIII");
@@ -128,7 +128,7 @@ public class RobotContainer {
                    return swerveControllerCommand;
                  }
 }
-
+*/
 
   private void configureBindings() {
     m_driverController.a().onTrue(zeroHeading); 
